@@ -1,5 +1,6 @@
 .overview {
     padding: 38px 42px 40px;
+    padding-top: 80px;
     box-sizing: border-box;
     color: #29234a;
 }
@@ -45,41 +46,64 @@
 /* =========================
    STAT CARDS
 ========================= */
-
 .stat_cards {
     display: grid;
-
     grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 22px;
+    width: 100%;
+    align-items: stretch;
+}
 
-    gap: 25px;
+/* Interactive dashboard cards */
+
+.stat-card-link {
+    display: block;
+    min-width: 0;
+    color: inherit;
+    text-decoration: none;
+    border-radius: 13px;
+    outline-offset: 4px;
+}
+
+.stat-card-link .problems_solve {
+    height: 100%;
+    min-height: 105px;
+    cursor: pointer;
+}
+
+.stat-card-link:focus-visible {
+    outline: 2px solid #5b2bc5;
+}
+
+.stat-card-link:hover .problems_solve {
+    transform: translateY(-3px);
+    border-color: #c8b5f2;
+    box-shadow: 0 8px 22px rgba(83, 54, 150, 0.10);
 }
 
 
-.problems_solve {
-    min-width: 0;
-    height: 105px;
 
+.problems_solve {
+    width: 100%;
+    min-width: 0;
+    min-height: 120px;
+    height: 100%;
     box-sizing: border-box;
 
     display: flex;
     align-items: center;
+    gap: 12px;
 
+    padding: 18px 14px;
     background: #ffffff;
-
     border: 1px solid #e4dfec;
-
     border-radius: 13px;
-
     box-shadow: 0 5px 18px rgba(83, 54, 150, 0.05);
 
-    transition: 0.2s ease;
+    transition: transform 0.2s ease, box-shadow 0.2s ease,
+                border-color 0.2s ease;
 }
 
-.problems_solve:hover {
-    transform: translateY(-2px);
-
-    box-shadow: 0 8px 22px rgba(83, 54, 150, 0.09);
-}
 
 
 /* =========================
@@ -87,17 +111,14 @@
 ========================= */
 
 .problems_solve .icon {
-    width: 42px;
-    height: 42px;
-
+    width: 38px;
+    height: 38px;
     flex-shrink: 0;
-
-    margin: 0 15px;
+    margin: 0;
 
     display: flex;
     align-items: center;
     justify-content: center;
-
     color: #5b2bc5;
 }
 
@@ -122,7 +143,7 @@
 .problems_solve_text .title {
     font-family: Arial, sans-serif;
 
-    font-size: 13px;
+    font-size: 12px;
 
     color: #29234a;
 }
@@ -131,13 +152,13 @@
 /* Number */
 
 .problems_solve_text .number {
-    margin-top: 3px;
+    margin-top: 6px;
 
     font-family: Georgia, serif;
 
-    font-size: 28px;
+    font-size: 26px;
 
-    line-height: 1;
+    line-height: 1.1;
 
     color: #17152b;
 }
@@ -146,11 +167,12 @@
 /* Subtitle */
 
 .problems_solve_text .subtitle {
-    margin-top: 5px;
+    margin-top: 6px;
 
     font-family: Arial, sans-serif;
 
     font-size: 10px;
+    line-height: 1.4;
 
     color: #77718f;
 }
@@ -278,20 +300,22 @@
 }
 
 
+
 /* =========================
    RESPONSIVE
 ========================= */
 
-@media (max-width: 1100px) {
+@media (max-width: 900px) {
 
     .stat_cards {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 18px;
     }
 
 }
 
 
-@media (max-width: 700px) {
+@media (max-width: 600px) {
 
     .overview {
         padding: 28px 20px;
@@ -299,6 +323,7 @@
 
     .stat_cards {
         grid-template-columns: 1fr;
+        gap: 14px;
     }
 
     .recommandation_box {

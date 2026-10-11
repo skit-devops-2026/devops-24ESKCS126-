@@ -163,6 +163,154 @@
     color: #918ba2;
 }
 
+/* Record a solved problem */
+
+.activity-form {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+    margin-top: 18px;
+}
+
+.activity-form input,
+.activity-form select {
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+    padding: 12px 14px;
+    border: 1px solid #e4dfec;
+    border-radius: 8px;
+    background: #fff;
+    color: #29234a;
+    font-size: 14px;
+    outline: none;
+}
+
+.activity-form input:focus,
+.activity-form select:focus {
+    border-color: #5b2bc5;
+    box-shadow: 0 0 0 3px rgba(91, 43, 197, 0.1);
+}
+
+.activity-form button {
+    grid-column: 1 / -1;
+    justify-self: start;
+    padding: 12px 18px;
+    border: none;
+    border-radius: 8px;
+    background: #5b2bc5;
+    color: white;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.activity-form button:hover {
+    background: #4b20ad;
+    transform: translateY(-1px);
+}
+
+/* Activity chart */
+
+.activity-chart {
+    width: 100%;
+    height: 280px;
+    margin-top: 24px;
+}
+
+.activity-period-select {
+    padding: 9px 12px;
+    border: 1px solid #e6e0f2;
+    border-radius: 8px;
+    background: #fff;
+    color: #6035c5;
+    font-family: Arial, sans-serif;
+    font-size: 12px;
+    cursor: pointer;
+    outline: none;
+}
+
+.activity-period-select:focus-visible {
+    outline: 2px solid #5b2bc5;
+    outline-offset: 3px;
+}
+
+/* Topic-wise progress */
+
+.topic-progress-list {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+    margin-top: 24px;
+}
+
+.topic-progress-item {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+}
+
+.topic-progress-label {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    font-family: Arial, sans-serif;
+    font-size: 13px;
+    color: #29234a;
+}
+
+.topic-progress-label span:last-child {
+    color: #77718f;
+    font-size: 11px;
+}
+
+.topic-progress-track {
+    width: 100%;
+    height: 8px;
+    overflow: hidden;
+    border-radius: 20px;
+    background: #eeeaf5;
+}
+
+.topic-progress-fill {
+    height: 100%;
+    border-radius: inherit;
+    background: #7950cf;
+    transition: width 0.3s ease;
+}
+
+.topic-empty {
+    margin: 20px 0 0;
+    color: #77718f;
+    font-size: 13px;
+}
+
+
+@media (max-width: 600px) {
+    .activity-chart {
+        height: 240px;
+    }
+
+    .activity-period-select {
+        max-width: 125px;
+    }
+}
+
+
+@media (max-width: 600px) {
+    .activity-form {
+        grid-template-columns: 1fr;
+    }
+
+    .activity-form button {
+        grid-column: auto;
+        justify-self: stretch;
+    }
+}
+
+
 /* RESPONSIVE */
 
 @media (max-width: 900px) {
