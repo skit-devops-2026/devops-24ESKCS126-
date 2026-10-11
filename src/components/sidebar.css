@@ -1,115 +1,215 @@
-:root {
-    --sidebar-width: 220px;
-}
-
-/* SIDEBAR */
-
-.sidebar {
+.navigation {
     position: fixed;
-    top: 0;
-    left: 0;
 
-    width: var(--sidebar-width);
-    height: 100vh;
+    top: 60px;
+    left: 0;
+    right: 0;
+
+    height: 60px;
 
     box-sizing: border-box;
 
-    background-color: #f9f9ff;
+    background-color: #faf9fd;
 
-    display: flex;
-    flex-direction: column;
+    border-bottom: 1px solid #e8e3f3;
 
-    z-index: 1000;
-}
-
-
-/* LOGO */
-
-.logo {
     display: flex;
     align-items: center;
+    justify-content: center;
 
-    gap: 10px;
+    padding: 0 25px;
 
-    padding: 28px 28px 0;
-}
+    box-shadow: 0 2px 8px rgba(41, 35, 74, 0.03);
 
-.logo-icon {
-    font-size: 29px;
-}
-
-.logo-text {
-    font-family: Georgia, serif;
-
-    font-size: 22px;
-
-    color: #17152b;
+    z-index: 999;
 }
 
 
-/* NAVIGATION */
+/* NAVIGATION LINKS */
 
-.sidebar-nav {
+.navigation-links {
     display: flex;
-    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 
     gap: 8px;
-
-    margin-top: 65px;
-
-    padding: 0 18px;
 }
 
-.sidebar-nav a {
-    display: flex;
-    align-items: center;
-
-    height: 42px;
-
-    padding: 0 14px;
-
-    box-sizing: border-box;
-
+.navigation-links a {
     text-decoration: none;
 
-    color: #17152b;
+    color: #625b7c;
 
     font-family: Georgia, serif;
 
     font-size: 14px;
 
-    border-radius: 8px;
+    white-space: nowrap;
 
-    transition: 0.2s ease;
+    padding: 8px 13px;
+
+    border-radius: 9px;
+
+    transition:
+        background-color 0.2s ease,
+        color 0.2s ease;
 }
 
-.sidebar-nav a:hover,
-.sidebar-nav a.active {
-    background-color: #eae4fd;
-    color: #5b2bc5;
+.navigation-links a:hover {
+    color: #29234a;
+
+    background-color: #f0edf8;
 }
+
+.navigation-links a.active {
+    color: #29234a;
+
+    font-weight: bold;
+
+    background-color: #e9e4f6;
+}
+
+
+/* HIDDEN MEASUREMENT LINKS */
+
+.measurement-links {
+    position: absolute;
+
+    visibility: hidden;
+
+    pointer-events: none;
+
+    white-space: nowrap;
+
+    display: flex;
+
+    gap: 40px;
+}
+
+.measurement-links span {
+    font-family: Georgia, serif;
+
+    font-size: 14px;
+
+    padding: 8px 4px;
+}
+
+
+/* MORE MENU */
+
+.more-menu {
+    position: relative;
+}
+
+.more-button {
+    display: flex;
+    align-items: center;
+
+    gap: 2px;
+
+    border: none;
+    outline: none;
+
+    background: transparent;
+
+    color: #625b7c;
+
+    font-family: Georgia, serif;
+
+    font-size: 14px;
+
+    padding: 8px 13px;
+
+    border-radius: 9px;
+
+    cursor: pointer;
+
+    transition:
+        background-color 0.2s ease,
+        color 0.2s ease;
+}
+
+.more-button:hover {
+    color: #29234a;
+
+    background-color: #f0edf8;
+}
+
+
+/* MORE DROPDOWN */
+
+.more-dropdown {
+    position: absolute;
+
+    top: 43px;
+    right: 0;
+
+    min-width: 170px;
+
+    background-color: #ffffff;
+
+    border: 1px solid #e8e3f3;
+
+    border-radius: 10px;
+
+    padding: 6px;
+
+    box-shadow: 0 8px 24px rgba(41, 35, 74, 0.12);
+
+    z-index: 1100;
+}
+
+.more-dropdown a {
+    display: block;
+
+    padding: 10px 13px;
+
+    border-radius: 7px;
+
+    text-decoration: none;
+
+    color: #625b7c;
+
+    font-family: Georgia, serif;
+
+    font-size: 14px;
+}
+
+.more-dropdown a:hover {
+    color: #29234a;
+
+    background-color: #f0edf8;
+}
+
+
+/* MOBILE */
 
 @media (max-width: 700px) {
-    :root {
-        --sidebar-width: 180px;
-    }
 
-    .logo {
-        padding-left: 20px;
-        padding-right: 20px;
-    }
-
-    .logo-text {
-        font-size: 19px;
-    }
-
-    .sidebar-nav {
+    .navigation {
         padding: 0 12px;
-        margin-top: 45px;
     }
 
-    .sidebar-nav a {
-        padding: 0 10px;
+    .navigation-links {
+        gap: 4px;
+
+        max-width: 100%;
+
+        overflow: visible;
+    }
+
+    .navigation-links a,
+    .more-button {
         font-size: 13px;
+
+        padding: 7px 9px;
+    }
+
+    .more-dropdown {
+        top: 40px;
+
+        right: 0;
+
+        min-width: 155px;
     }
 }

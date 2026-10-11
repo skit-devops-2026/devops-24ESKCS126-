@@ -1,5 +1,4 @@
 :root {
-    --sidebar-width: 220px;
     --topbar-height: 60px;
 }
 
@@ -9,8 +8,6 @@
 }
 
 .main {
-    margin-left: var(--sidebar-width);
-
     min-height: 100vh;
 
     min-width: 0;
@@ -19,7 +16,7 @@
 }
 
 .content {
-    padding-top: 60px;
+    padding-top:120px;
 
     min-height: 100vh;
 
@@ -27,6 +24,7 @@
 }
 
 @media (max-width: 700px) {
+
     .main {
         overflow-x: hidden;
     }
