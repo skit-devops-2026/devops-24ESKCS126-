@@ -122,6 +122,52 @@ function Recommendations() {
     const [openReason, setOpenReason] = useState(null);
     const [activeFilter, setActiveFilter] = useState('All');
 
+    const [savedProblems, setSavedProblems] = useState(() => {
+        try {
+            return JSON.parse(
+                localStorage.getItem('dsaforge-saved-problems') || '[]'
+            );
+        } catch {
+            return [];
+        }
+    });
+
+    const [completedProblems, setCompletedProblems] = useState(() => {
+        try {
+            return JSON.parse(
+                localStorage.getItem('dsaforge-completed-problems') || '[]'
+            );
+        } catch {
+            return [];
+        }
+    });
+
+    const [showSavedOnly, setShowSavedOnly] = useState(false);
+
+    const toggleSaved = (problemId) => {
+        const updated = savedProblems.includes(problemId)
+            ? savedProblems.filter((id) => id !== problemId)
+            : [...savedProblems, problemId];
+
+        setSavedProblems(updated);
+        localStorage.setItem(
+            'dsaforge-saved-problems',
+            JSON.stringify(updated)
+        );
+    };
+
+    const markCompleted = (problemId) => {
+        if (completedProblems.includes(problemId)) return;
+
+        const updated = [...completedProblems, problemId];
+        setCompletedProblems(updated);
+        localStorage.setItem(
+            'dsaforge-completed-problems',
+            JSON.stringify(updated)
+        );
+    };
+
+
     // Read the existing activity history.
 
     const [activityData, setActivityData] = useState(
@@ -169,7 +215,8 @@ function Recommendations() {
 
     const recommendations = problemBank
         .filter((problem) =>
-            !completedTitles.has(problem.title.toLowerCase())
+            !completedTitles.has(problem.title.toLowerCase()) &&
+            !completedProblems.includes(problem.id)
         )
         .map((problem) => {
             const practiceCount = getPracticeCount(problem);
@@ -190,13 +237,17 @@ function Recommendations() {
         .sort((a, b) => a.practiceCount - b.practiceCount);
 
     const filteredRecommendations = recommendations.filter((problem) => {
-        if (activeFilter === 'All') return true;
-
-        return (
+        const matchesFilter =
+            activeFilter === 'All' ||
             problem.difficulty === activeFilter ||
-            problem.platform === activeFilter
-        );
+            problem.platform === activeFilter;
+
+        const matchesSaved =
+            !showSavedOnly || savedProblems.includes(problem.id);
+
+        return matchesFilter && matchesSaved;
     });
+
 
     return (
         <div className="recommendations-page">
@@ -217,6 +268,30 @@ function Recommendations() {
                     </p>
                 </div>
             </div>
+
+            <div className="recommendation-stats">
+                <div className="recommendation-stat">
+                    <span>Available</span>
+                    <strong>{recommendations.length}</strong>
+                </div>
+
+                <div className="recommendation-stat">
+                    <span>Saved</span>
+                    <strong>{savedProblems.length}</strong>
+                </div>
+
+                <div className="recommendation-stat">
+                    <span>Completed</span>
+                    <strong>{completedProblems.length}</strong>
+                </div>
+            </div>
+
+            <button
+                className={`saved-toggle ${showSavedOnly ? 'active' : ''}`}
+                onClick={() => setShowSavedOnly(!showSavedOnly)}
+            >
+                {showSavedOnly ? 'Show all problems' : '♡ Show saved problems'}
+            </button>
 
             <div className="recommendation-filters">
                 {filters.map((filter) => (
@@ -304,6 +379,27 @@ function Recommendations() {
                                     {openReason === problem.id
                                         ? 'Hide reason'
                                         : 'Why this?'}
+                                </button>
+
+                                <button
+                                    className={`save-btn ${
+                                        savedProblems.includes(problem.id) ? 'saved' : ''
+                                    }`}
+                                    onClick={() => toggleSaved(problem.id)}
+                                >
+                                    {savedProblems.includes(problem.id)
+                                        ? '♥ Saved'
+                                        : '♡ Save for later'}
+                                </button>
+
+                                <button
+                                    className="complete-btn"
+                                    disabled={completedProblems.includes(problem.id)}
+                                    onClick={() => markCompleted(problem.id)}
+                                >
+                                    {completedProblems.includes(problem.id)
+                                        ? '✓ Completed'
+                                        : '✓ Mark completed'}
                                 </button>
 
                                 {openReason === problem.id && (
