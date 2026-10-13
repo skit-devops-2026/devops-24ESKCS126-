@@ -17,6 +17,8 @@ import {
 
 function Activity() {
     const [data, setData] = useState(() => getActivityData());
+    const [platformFilter, setPlatformFilter] = useState("All");
+    const [difficultyFilter, setDifficultyFilter] = useState("All");
 
     function handleSubmit(event) {
         event.preventDefault();
@@ -115,6 +117,18 @@ function Activity() {
             return topics;
         }, {})
     ).sort((a, b) => b.count - a.count);
+
+    const filteredActivities = data.activities.filter((activity) => {
+        const matchesPlatform =
+            platformFilter === "All" ||
+            activity.platform === platformFilter;
+
+        const matchesDifficulty =
+            difficultyFilter === "All" ||
+            activity.difficulty === difficultyFilter;
+
+        return matchesPlatform && matchesDifficulty;
+    });
 
     return (
         <div className="activity-page">

@@ -1,6 +1,6 @@
 
 const STORAGE_KEY = "dsaforge-activity-data";
-const ACTIVITY_EVENT = "dsaforge-activity-updated";
+export const ACTIVITY_EVENT = "dsaforge-activity-updated";
 
 // Keep the existing prototype stats consistent with the dashboard.
 // The activity history starts empty until problems are recorded.

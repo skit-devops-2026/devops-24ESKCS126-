@@ -1,12 +1,29 @@
 import './overview.css'
 import {MdCode} from "react-icons/md";
 import { Link } from "react-router-dom";
-import { useState } from "react";
-import { getActivityData } from "../data/activityData";
+import { useEffect,useState } from "react";
+import {
+    getActivityData,
+    ACTIVITY_EVENT
+} from "../data/activityData";
 
 
 function Overview(){
-    const [data] = useState(() => getActivityData());
+    const [data, setData] = useState(() => getActivityData());
+
+    useEffect(() => {
+        function refreshActivityData() {
+            setData(getActivityData());
+        }
+
+        window.addEventListener(ACTIVITY_EVENT, refreshActivityData);
+        window.addEventListener("storage", refreshActivityData);
+
+        return () => {
+            window.removeEventListener(ACTIVITY_EVENT, refreshActivityData);
+            window.removeEventListener("storage", refreshActivityData);
+        };
+    }, []);
     const user = {
         name:"Shaili"
     };
