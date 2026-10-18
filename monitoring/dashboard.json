@@ -1,0 +1,25 @@
+﻿{
+  "title": "DSAForge Monitoring",
+  "uid": "dsaforge-monitoring",
+  "schemaVersion": 39,
+  "version": 1,
+  "refresh": "30s",
+  "panels": [
+    {
+      "id": 1,
+      "title": "Application Up",
+      "type": "stat",
+      "gridPos": {"h": 5, "w": 12, "x": 0, "y": 0},
+      "datasource": {"type": "prometheus", "uid": "${DS_PROMETHEUS}"},
+      "targets": [{"expr": "dsaforge_app_up", "legendFormat": "Application up"}]
+    },
+    {
+      "id": 2,
+      "title": "Build Information",
+      "type": "table",
+      "gridPos": {"h": 5, "w": 12, "x": 12, "y": 0},
+      "datasource": {"type": "prometheus", "uid": "${DS_PROMETHEUS}"},
+      "targets": [{"expr": "dsaforge_build_info", "legendFormat": "Build"}]
+    }
+  ]
+}
