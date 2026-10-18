@@ -1,4 +1,4 @@
-﻿{
+{
   "title": "DSAForge Monitoring",
   "uid": "dsaforge-monitoring",
   "schemaVersion": 39,
@@ -7,19 +7,23 @@
   "panels": [
     {
       "id": 1,
-      "title": "Application Up",
+      "title": "Nginx Exporter Up",
       "type": "stat",
       "gridPos": {"h": 5, "w": 12, "x": 0, "y": 0},
-      "datasource": {"type": "prometheus", "uid": "${DS_PROMETHEUS}"},
-      "targets": [{"expr": "dsaforge_app_up", "legendFormat": "Application up"}]
+      "datasource": {"type": "prometheus", "uid": "prometheus"},
+      "targets": [
+        {"expr": "nginx_up", "legendFormat": "Nginx up"}
+      ]
     },
     {
       "id": 2,
-      "title": "Build Information",
-      "type": "table",
-      "gridPos": {"h": 5, "w": 12, "x": 12, "y": 0},
-      "datasource": {"type": "prometheus", "uid": "${DS_PROMETHEUS}"},
-      "targets": [{"expr": "dsaforge_build_info", "legendFormat": "Build"}]
+      "title": "HTTP Requests",
+      "type": "timeseries",
+      "gridPos": {"h": 8, "w": 12, "x": 12, "y": 0},
+      "datasource": {"type": "prometheus", "uid": "prometheus"},
+      "targets": [
+        {"expr": "nginx_http_requests_total", "legendFormat": "HTTP requests"}
+      ]
     }
   ]
 }
