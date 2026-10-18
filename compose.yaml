@@ -1,0 +1,12 @@
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        COMMIT_SHA: ${COMMIT_SHA:-unknown}
+    image: dsaforge-frontend:local
+    container_name: dsaforge-frontend
+    ports:
+      - "8080:80"
+    restart: unless-stopped

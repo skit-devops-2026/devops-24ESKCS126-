@@ -28,7 +28,7 @@ make run
 
 ## Live URL
 
-<Add once M5 is done. Until then, leave as is.>
+https://dsaforge-frontend-latest.onrender.com
 
 
 ## Health endpoint
