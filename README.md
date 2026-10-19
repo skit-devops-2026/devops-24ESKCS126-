@@ -35,3 +35,14 @@ https://dsaforge-frontend-latest.onrender.com
 
 `GET /health` returns the running commit SHA. See `Makefile` and the milestone
 sheet for why this is required.
+
+## Docker Image
+
+The DSAForge frontend Docker image is publicly available on Docker Hub.
+
+- **Docker Hub Repository:** https://hub.docker.com/r/92512/dsaforge-frontend
+- **Image:** `92512/dsaforge-frontend:latest`
+
+Pull the image using:
+
+docker pull 92512/dsaforge-frontend:latest
