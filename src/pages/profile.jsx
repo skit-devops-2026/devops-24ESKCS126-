@@ -1,11 +1,11 @@
-
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import './profile.css';
+import { getActivityData, ACTIVITY_EVENT } from '../data/activityData';
 
 const defaultProfile = {
-    name: 'Shaili',
-    email: 'shaili@example.com',
-    goal: 'Master DSA'
+    name: 'Learner',
+    email: 'learner@dsaforge.dev',
+    goal: 'Master Data Structures & Algorithms'
 };
 
 function getSavedProfile() {
@@ -21,8 +21,39 @@ function Profile() {
     const [profile, setProfile] = useState(getSavedProfile);
     const [formData, setFormData] = useState(profile);
     const [editing, setEditing] = useState(false);
-    const [codeChefUsername, setCodeChefUsername] = useState('');
-    const [showCodeChefForm, setShowCodeChefForm] = useState(false);
+    const [activityData, setActivityData] = useState(() => getActivityData());
+
+    const [handles, setHandles] = useState(() => {
+        try {
+            return JSON.parse(localStorage.getItem('dsaforge-platform-handles') || '{}');
+        } catch {
+            return { leetcode: '', gfg: '', codeforces: '', hackerrank: '', codechef: '' };
+        }
+    });
+
+    useEffect(() => {
+        function refreshActivity() {
+            setActivityData(getActivityData());
+        }
+
+        window.addEventListener(ACTIVITY_EVENT, refreshActivity);
+        window.addEventListener('storage', refreshActivity);
+
+        return () => {
+            window.removeEventListener(ACTIVITY_EVENT, refreshActivity);
+            window.removeEventListener('storage', refreshActivity);
+        };
+    }, []);
+
+    const handlePlatformChange = (platform, value) => {
+        const updated = { ...handles, [platform]: value.trim() };
+        setHandles(updated);
+        try {
+            localStorage.setItem('dsaforge-platform-handles', JSON.stringify(updated));
+        } catch (e) {
+            console.error('Could not save handles to localStorage:', e);
+        }
+    };
 
     function handleChange(event) {
         const { name, value } = event.target;
@@ -71,18 +102,6 @@ function Profile() {
         setEditing(false);
     }
 
-    function handleCodeChefSave(event) {
-        event.preventDefault();
-
-        if (!codeChefUsername.trim()) {
-            alert('Please enter your CodeChef username.');
-            return;
-        }
-
-        // Demo only: saves a username locally; does not verify an account.
-        setShowCodeChefForm(false);
-    }
-
     return (
         <div className="profile-page">
             <div className="profile-header">
@@ -93,7 +112,7 @@ function Profile() {
             <div className="profile-content">
                 <div className="profile-card">
                     <div className="profile-avatar">
-                        {profile.name.charAt(0).toUpperCase()}
+                        {(profile.name || 'L').charAt(0).toUpperCase()}
                     </div>
 
                     <h2>{profile.name}</h2>
@@ -104,17 +123,17 @@ function Profile() {
                     <div className="profile-info">
                         <div>
                             <span>Problems Solved</span>
-                            <strong>124</strong>
+                            <strong>{activityData.problemsSolved}</strong>
                         </div>
 
                         <div>
                             <span>Current Streak</span>
-                            <strong>14 days</strong>
+                            <strong>{activityData.currentStreak} {activityData.currentStreak === 1 ? 'day' : 'days'}</strong>
                         </div>
 
                         <div>
                             <span>Accuracy</span>
-                            <strong>72%</strong>
+                            <strong>{activityData.problemsSolved > 0 ? `${activityData.accuracy}%` : 'N/A'}</strong>
                         </div>
                     </div>
                 </div>
@@ -208,74 +227,80 @@ function Profile() {
                     </div>
 
                     <div className="details-card">
-                        <h2>Connected Platforms</h2>
+                        <h2>Connected Coding Platforms</h2>
+                        <p style={{ color: '#888', marginBottom: '16px' }}>
+                            Enter your platform usernames so DSAForge's ML model can analyze your practice history.
+                        </p>
 
-                        <div className="platform-row">
+                        <div className="platform-row" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
                             <div>
                                 <strong>LeetCode</strong>
-                                <p>Demo status</p>
+                                <p>{handles.leetcode ? `Username: ${handles.leetcode}` : 'Not connected'}</p>
                             </div>
-                            <span className="connected">Connected</span>
+                            <input
+                                type="text"
+                                placeholder="LeetCode username"
+                                value={handles.leetcode || ''}
+                                onChange={(e) => handlePlatformChange('leetcode', e.target.value)}
+                                style={{ padding: '6px 12px', borderRadius: '6px', border: '1px solid #ccc' }}
+                            />
                         </div>
 
-                        <div className="platform-row">
+                        <div className="platform-row" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
+                            <div>
+                                <strong>GeeksforGeeks</strong>
+                                <p>{handles.gfg ? `Username: ${handles.gfg}` : 'Not connected'}</p>
+                            </div>
+                            <input
+                                type="text"
+                                placeholder="GFG handle"
+                                value={handles.gfg || ''}
+                                onChange={(e) => handlePlatformChange('gfg', e.target.value)}
+                                style={{ padding: '6px 12px', borderRadius: '6px', border: '1px solid #ccc' }}
+                            />
+                        </div>
+
+                        <div className="platform-row" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
+                            <div>
+                                <strong>Codeforces</strong>
+                                <p>{handles.codeforces ? `Handle: ${handles.codeforces}` : 'Not connected'}</p>
+                            </div>
+                            <input
+                                type="text"
+                                placeholder="Codeforces handle"
+                                value={handles.codeforces || ''}
+                                onChange={(e) => handlePlatformChange('codeforces', e.target.value)}
+                                style={{ padding: '6px 12px', borderRadius: '6px', border: '1px solid #ccc' }}
+                            />
+                        </div>
+
+                        <div className="platform-row" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
                             <div>
                                 <strong>HackerRank</strong>
-                                <p>Demo status</p>
+                                <p>{handles.hackerrank ? `Username: ${handles.hackerrank}` : 'Not connected'}</p>
                             </div>
-                            <span className="connected">Connected</span>
+                            <input
+                                type="text"
+                                placeholder="HackerRank username"
+                                value={handles.hackerrank || ''}
+                                onChange={(e) => handlePlatformChange('hackerrank', e.target.value)}
+                                style={{ padding: '6px 12px', borderRadius: '6px', border: '1px solid #ccc' }}
+                            />
                         </div>
 
-                        <div className="platform-row">
+                        <div className="platform-row" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
                             <div>
                                 <strong>CodeChef</strong>
-                                <p>
-                                    {codeChefUsername
-                                        ? `Username: ${codeChefUsername}`
-                                        : 'Not connected'}
-                                </p>
+                                <p>{handles.codechef ? `Username: ${handles.codechef}` : 'Not connected'}</p>
                             </div>
-
-                            <button
-                                type="button"
-                                className="not-connected"
-                                onClick={() => setShowCodeChefForm((value) => !value)}
-                            >
-                                {showCodeChefForm
-                                    ? 'Cancel'
-                                    : codeChefUsername
-                                        ? 'Edit Username'
-                                        : 'Add Username'}
-                            </button>
+                            <input
+                                type="text"
+                                placeholder="CodeChef username"
+                                value={handles.codechef || ''}
+                                onChange={(e) => handlePlatformChange('codechef', e.target.value)}
+                                style={{ padding: '6px 12px', borderRadius: '6px', border: '1px solid #ccc' }}
+                            />
                         </div>
-
-                        {showCodeChefForm && (
-                            <form
-                                className="codechef-form"
-                                onSubmit={handleCodeChefSave}
-                            >
-                                <label htmlFor="codechef-username">
-                                    CodeChef username
-                                </label>
-
-                                <input
-                                    id="codechef-username"
-                                    value={codeChefUsername}
-                                    onChange={(event) =>
-                                        setCodeChefUsername(event.target.value)
-                                    }
-                                    placeholder="Enter your username"
-                                    required
-                                />
-
-                                <button
-                                    type="submit"
-                                    className="edit-profile-btn"
-                                >
-                                    Save Username
-                                </button>
-                            </form>
-                        )}
                     </div>
                 </div>
             </div>

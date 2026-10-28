@@ -1,5 +1,5 @@
 import './App.css';
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 
 import Topbar from "./components/topbar.jsx";
 import Sidebar from "./components/sidebar.jsx";
@@ -96,6 +96,12 @@ function App() {
                         <Settings />
                     </DashboardLayout>
                 }
+            />
+
+            {/* Alias /settings to /setting to prevent 404s */}
+            <Route
+                path="/settings"
+                element={<Navigate to="/setting" replace />}
             />
 
             {/* Invalid URL */}

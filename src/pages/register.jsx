@@ -9,13 +9,18 @@ function Register() {
     const handleRegister = (e) => {
         e.preventDefault();
 
-        const name = e.target.name.value;
-        const email = e.target.email.value;
+        const name = e.target.name.value.trim();
+        const email = e.target.email.value.trim();
         const password = e.target.password.value;
         const confirmPassword = e.target.confirmPassword.value;
 
         if (!name || !email || !password || !confirmPassword) {
             setError('Please fill in all fields.');
+            return;
+        }
+
+        if (!email.includes('@')) {
+            setError('Please enter a valid email address.');
             return;
         }
 
@@ -29,15 +34,35 @@ function Register() {
             return;
         }
 
+        try {
+            // Save registered profile to localStorage so user's real name is used across the dashboard
+            const profileData = {
+                name: name,
+                email: email,
+                goal: 'Master Data Structures & Algorithms'
+            };
+            localStorage.setItem('dsaforge-profile', JSON.stringify(profileData));
+            localStorage.setItem('dsaforge-auth', JSON.stringify({ isLoggedIn: true, name, email }));
+        } catch (err) {
+            console.error('Could not save user profile:', err);
+        }
+
         setError('');
-        navigate('/login');
+        navigate('/overview');
     };
+
     return (
         <div className="register-page">
 
             <div className="register-left">
                 <Link to="/" className="register-logo">
-                    <span>🚀</span>
+                    <div style={{ width: 30, height: 30, borderRadius: 8, background: 'linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 8px rgba(79, 70, 229, 0.25)' }}>
+                        <svg width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='white' strokeWidth='2.4' strokeLinecap='round' strokeLinejoin='round'>
+                            <path d='M12 2L2 7L12 12L22 7L12 2Z' />
+                            <path d='M2 17L12 22L22 17' />
+                            <path d='M2 12L12 17L22 12' />
+                        </svg>
+                    </div>
                     <span>DSAForge</span>
                 </Link>
 
@@ -107,24 +132,18 @@ function Register() {
                                 required
                             />
                         </div>
-                        {error && (
-                            <p className="form-error">
-                                {error}
-                            </p>
-                        )}
 
-                        <button
-                            type="submit"
-                            className="register-button"
-                        >
-                            Create Account
+                        {error && <p className="register-error">{error}</p>}
+
+                        <button type="submit" className="register-button">
+                            Create Account →
                         </button>
 
                     </form>
 
-                    <p className="login-text">
-                        Already have an account?
-                        <Link to="/login"> Login</Link>
+                    <p className="register-footer">
+                        Already have an account?{' '}
+                        <Link to="/login">Login</Link>
                     </p>
 
                 </div>

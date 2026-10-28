@@ -1,102 +1,65 @@
 .navigation {
     position: fixed;
-
     top: 60px;
     left: 0;
     right: 0;
-
-    height: 60px;
-
+    height: 52px;
     box-sizing: border-box;
-
-    background-color: #faf9fd;
-
-    border-bottom: 1px solid #e8e3f3;
-
+    background-color: #ffffff;
+    border-bottom: 1px solid #e2e8f0;
     display: flex;
     align-items: center;
     justify-content: center;
-
-    padding: 0 25px;
-
-    box-shadow: 0 2px 8px rgba(41, 35, 74, 0.03);
-
+    padding: 0 24px;
     z-index: 999;
 }
 
-
 /* NAVIGATION LINKS */
-
 .navigation-links {
     display: flex;
     align-items: center;
     justify-content: center;
-
-    gap: 8px;
+    gap: 6px;
 }
 
 .navigation-links a {
     text-decoration: none;
-
-    color: #625b7c;
-
-    font-family: Georgia, serif;
-
-    font-size: 14px;
-
+    color: #475569;
+    font-size: 13.5px;
+    font-weight: 500;
     white-space: nowrap;
-
-    padding: 8px 13px;
-
-    border-radius: 9px;
-
-    transition:
-        background-color 0.2s ease,
-        color 0.2s ease;
+    padding: 6px 14px;
+    border-radius: 8px;
+    transition: all 0.15s ease;
 }
 
 .navigation-links a:hover {
-    color: #29234a;
-
-    background-color: #f0edf8;
+    color: #0f172a;
+    background-color: #f1f5f9;
 }
 
 .navigation-links a.active {
-    color: #29234a;
-
-    font-weight: bold;
-
-    background-color: #e9e4f6;
+    color: #4f46e5;
+    font-weight: 600;
+    background-color: #eef2ff;
 }
 
-
 /* HIDDEN MEASUREMENT LINKS */
-
 .measurement-links {
     position: absolute;
-
     visibility: hidden;
-
     pointer-events: none;
-
     white-space: nowrap;
-
     display: flex;
-
     gap: 40px;
 }
 
 .measurement-links span {
-    font-family: Georgia, serif;
-
-    font-size: 14px;
-
-    padding: 8px 4px;
+    font-size: 13.5px;
+    padding: 6px 4px;
 }
 
-
 /* MORE MENU */
-
 .more-menu {
     position: relative;
 }
@@ -104,112 +67,74 @@
 .more-button {
     display: flex;
     align-items: center;
-
-    gap: 2px;
-
+    gap: 4px;
     border: none;
     outline: none;
-
     background: transparent;
-
-    color: #625b7c;
-
-    font-family: Georgia, serif;
-
-    font-size: 14px;
-
-    padding: 8px 13px;
-
-    border-radius: 9px;
-
+    color: #475569;
+    font-size: 13.5px;
+    font-weight: 500;
+    padding: 6px 14px;
+    border-radius: 8px;
     cursor: pointer;
-
-    transition:
-        background-color 0.2s ease,
-        color 0.2s ease;
+    transition: all 0.15s ease;
 }
 
 .more-button:hover {
-    color: #29234a;
-
-    background-color: #f0edf8;
+    color: #0f172a;
+    background-color: #f1f5f9;
 }
 
-
 /* MORE DROPDOWN */
-
 .more-dropdown {
     position: absolute;
-
-    top: 43px;
+    top: 42px;
     right: 0;
-
     min-width: 170px;
-
     background-color: #ffffff;
-
-    border: 1px solid #e8e3f3;
-
-    border-radius: 10px;
-
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
     padding: 6px;
-
-    box-shadow: 0 8px 24px rgba(41, 35, 74, 0.12);
-
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
     z-index: 1100;
 }
 
 .more-dropdown a {
     display: block;
-
-    padding: 10px 13px;
-
+    padding: 8px 12px;
     border-radius: 7px;
-
     text-decoration: none;
-
-    color: #625b7c;
-
-    font-family: Georgia, serif;
-
-    font-size: 14px;
+    color: #475569;
+    font-size: 13.5px;
+    transition: all 0.15s ease;
 }
 
 .more-dropdown a:hover {
-    color: #29234a;
-
-    background-color: #f0edf8;
+    color: #4f46e5;
+    background-color: #f1f5f9;
 }
 
-
 /* MOBILE */
-
 @media (max-width: 700px) {
-
     .navigation {
         padding: 0 12px;
     }
 
     .navigation-links {
-        gap: 4px;
-
+        gap: 3px;
         max-width: 100%;
-
         overflow: visible;
     }
 
     .navigation-links a,
     .more-button {
-        font-size: 13px;
-
-        padding: 7px 9px;
+        font-size: 12.5px;
+        padding: 6px 10px;
     }
 
     .more-dropdown {
-        top: 40px;
-
+        top: 38px;
         right: 0;
-
         min-width: 155px;
     }
 }

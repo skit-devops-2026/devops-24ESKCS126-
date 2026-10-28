@@ -1,0 +1,11 @@
+[
+  "problem_rating",
+  "rating_gap",
+  "absolute_rating_gap",
+  "problem_tag_count",
+  "familiar_tag_overlap",
+  "familiar_tag_ratio",
+  "personalized_topic_score",
+  "recent_rating_gap",
+  "absolute_recent_rating_gap"
+]

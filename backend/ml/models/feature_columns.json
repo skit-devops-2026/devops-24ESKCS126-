@@ -1,0 +1,9 @@
+[
+  "problem_rating",
+  "rating_gap",
+  "absolute_rating_gap",
+  "historical_solved_count",
+  "problem_tag_count",
+  "familiar_tag_overlap",
+  "familiar_tag_ratio"
+]

@@ -2,9 +2,23 @@
 node_modules/
 venv/
 .venv/
+**/venv/
+**/.venv/
 __pycache__/
+**/__pycache__/
 target/
 vendor/
+
+# Databases and large data files
+*.db
+*.sqlite
+*.sqlite3
+backend/ml/feature_preparation.db
+backend/ml/data/
+
+# Notebook checkpoints
+.ipynb_checkpoints/
+*.ipynb_checkpoints/
 
 # Build output
 dist/
@@ -36,7 +50,6 @@ lerna-debug.log*
 Thumbs.db
 *.suo
 *.ntvs*
-*.njsproj
 *.njsproj
 *.sln
 *.sw?

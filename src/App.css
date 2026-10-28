@@ -1,36 +1,54 @@
 :root {
     --topbar-height: 60px;
+    --nav-height: 52px;
+    
+    /* Elegant Color Tokens */
+    --primary: #4f46e5;
+    --primary-hover: #4338ca;
+    --primary-light: #eef2ff;
+    
+    --text-primary: #0f172a;
+    --text-secondary: #475569;
+    --text-muted: #94a3b8;
+    
+    --bg-page: #f8fafc;
+    --bg-card: #ffffff;
+    --border-subtle: #e2e8f0;
+    --border-focus: #c7d2fe;
+    
+    --success: #10b981;
+    --success-light: #ecfdf5;
+    --warning: #f59e0b;
+    --warning-light: #fffbeb;
+    --danger: #ef4444;
+    --danger-light: #fef2f2;
 }
 
 .app {
     width: 100%;
     min-height: 100vh;
+    background-color: var(--bg-page);
 }
 
 .main {
     min-height: 100vh;
-
     min-width: 0;
-
     box-sizing: border-box;
 }
 
 .content {
-    padding-top:120px;
-
+    padding-top: 112px;
     min-height: 100vh;
-
     box-sizing: border-box;
 }
 
 @media (max-width: 700px) {
-
     .main {
         overflow-x: hidden;
     }
 
     .content {
-        padding-left: 15px;
-        padding-right: 15px;
+        padding-left: 14px;
+        padding-right: 14px;
     }
 }

@@ -1,66 +1,60 @@
 .settings-page {
     min-height: calc(100vh - 60px);
-    padding: 34px 42px 40px;
+    padding: 32px 36px 48px;
     box-sizing: border-box;
-    background: #ffffff;
-    color: #29234a;
+    background: #f8fafc;
+    color: #0f172a;
+    max-width: 900px;
+    margin: 0 auto;
 }
 
 /* HEADER */
-
 .settings-header h1 {
     margin: 0;
-    font-family: Georgia, serif;
-    font-size: 28px;
-    color: #29234a;
+    font-size: 26px;
+    font-weight: 700;
+    color: #0f172a;
+    letter-spacing: -0.5px;
 }
 
 .settings-header p {
-    margin: 8px 0 0;
-    font-family: Arial, sans-serif;
-    font-size: 13px;
-    color: #77718f;
+    margin: 4px 0 0;
+    font-size: 14px;
+    color: #64748b;
 }
 
-/* SETTINGS CONTAINER */
-
+/* CONTAINER */
 .settings-container {
     display: flex;
     flex-direction: column;
     gap: 20px;
-    max-width: 900px;
-    margin-top: 35px;
+    margin-top: 26px;
 }
 
 /* CARD */
-
 .settings-card {
-    padding: 25px 28px;
+    padding: 24px 28px;
     box-sizing: border-box;
-
     background: #ffffff;
-    border: 1px solid #e6e0f2;
+    border: 1px solid #e2e8f0;
     border-radius: 16px;
-
-    box-shadow: 0 5px 18px rgba(83, 54, 150, 0.04);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
 }
 
 .settings-card h2 {
-    margin: 0 0 20px;
-    font-family: Georgia, serif;
-    font-size: 18px;
-    color: #29234a;
+    margin: 0 0 18px;
+    font-size: 16px;
+    font-weight: 600;
+    color: #0f172a;
 }
 
-/* SETTING ROW */
-
+/* ROWS */
 .setting-row {
     display: flex;
     align-items: center;
     justify-content: space-between;
-
-    min-height: 70px;
-    border-bottom: 1px solid #eeeaf5;
+    min-height: 64px;
+    border-bottom: 1px solid #f1f5f9;
 }
 
 .setting-row:last-child {
@@ -69,25 +63,23 @@
 
 .setting-row h3,
 .account-action h3 {
-    margin: 0 0 5px;
-    font-family: Georgia, serif;
-    font-size: 13px;
-    color: #29234a;
+    margin: 0 0 4px;
+    font-size: 13.5px;
+    font-weight: 600;
+    color: #0f172a;
 }
 
 .setting-row p,
 .account-action p {
     margin: 0;
-    font-family: Arial, sans-serif;
-    font-size: 10px;
-    color: #77718f;
+    font-size: 12px;
+    color: #64748b;
 }
 
 /* TOGGLE */
-
 .toggle {
     position: relative;
-    width: 40px;
+    width: 38px;
     height: 22px;
     flex-shrink: 0;
 }
@@ -101,46 +93,39 @@
 .toggle span {
     position: absolute;
     inset: 0;
-
-    background: #d8d3e2;
+    background: #cbd5e1;
     border-radius: 20px;
     cursor: pointer;
-
-    transition: 0.2s ease;
+    transition: 0.15s ease;
 }
 
 .toggle span::before {
     content: "";
-
     position: absolute;
     width: 16px;
     height: 16px;
     left: 3px;
     top: 3px;
-
     background: #ffffff;
     border-radius: 50%;
-
-    transition: 0.2s ease;
+    transition: 0.15s ease;
 }
 
 .toggle input:checked + span {
-    background: #5b2bc5;
+    background: #4f46e5;
 }
 
 .toggle input:checked + span::before {
-    transform: translateX(18px);
+    transform: translateX(16px);
 }
 
-/* SELECT SETTINGS */
-
+/* SELECTS */
 .setting-select {
     display: flex;
     align-items: center;
     justify-content: space-between;
-
-    min-height: 58px;
-    border-bottom: 1px solid #eeeaf5;
+    min-height: 54px;
+    border-bottom: 1px solid #f1f5f9;
 }
 
 .setting-select:last-child {
@@ -148,42 +133,35 @@
 }
 
 .setting-select label {
-    font-family: Arial, sans-serif;
-    font-size: 11px;
+    font-size: 13px;
     font-weight: 600;
-    color: #514b66;
+    color: #475569;
 }
 
 .setting-select select {
     width: 180px;
     height: 36px;
     padding: 0 10px;
-
     background: #ffffff;
-    border: 1px solid #ddd7e9;
+    border: 1px solid #e2e8f0;
     border-radius: 7px;
-
-    color: #514b66;
-    font-family: Arial, sans-serif;
-    font-size: 11px;
-
+    color: #0f172a;
+    font-size: 13px;
     outline: none;
     cursor: pointer;
 }
 
 .setting-select select:focus {
-    border-color: #a995df;
+    border-color: #4f46e5;
 }
 
-/* ACCOUNT */
-
+/* ACCOUNT ACTIONS */
 .account-action {
     display: flex;
     align-items: center;
     justify-content: space-between;
-
-    min-height: 65px;
-    border-bottom: 1px solid #eeeaf5;
+    min-height: 60px;
+    border-bottom: 1px solid #f1f5f9;
 }
 
 .account-action:last-child {
@@ -191,32 +169,29 @@
 }
 
 .account-action button {
-    padding: 8px 15px;
-
-    background: #eee7ff;
-    border: none;
+    padding: 7px 16px;
+    background: #f1f5f9;
+    border: 1px solid #e2e8f0;
     border-radius: 7px;
-
-    color: #6035c5;
-    font-family: Arial, sans-serif;
-    font-size: 10px;
-    font-weight: 700;
-
+    color: #0f172a;
+    font-size: 12.5px;
+    font-weight: 600;
     cursor: pointer;
-    transition: 0.2s ease;
+    transition: all 0.15s ease;
 }
 
 .account-action button:hover {
-    background: #e1d5ff;
+    background: #4f46e5;
+    color: white;
+    border-color: #4f46e5;
 }
-
 
 .settings-message {
     margin-bottom: 20px;
     padding: 12px 16px;
     border-radius: 8px;
-    background: #f0ebff;
-    color: #5b2bc5;
+    background: #eef2ff;
+    color: #4338ca;
     font-size: 13px;
     display: flex;
     align-items: center;
@@ -226,36 +201,18 @@
 .settings-message button {
     border: none;
     background: transparent;
-    color: #5b2bc5;
+    color: #4338ca;
     font-size: 18px;
     cursor: pointer;
 }
 
-
-
-
 /* RESPONSIVE */
-
 @media (max-width: 700px) {
     .settings-page {
-        padding: 25px 20px;
+        padding: 24px 18px;
     }
 
     .settings-card {
-        padding: 22px;
-    }
-}
-
-@media (max-width: 500px) {
-    .setting-select {
-        align-items: flex-start;
-        flex-direction: column;
-        justify-content: center;
-        gap: 10px;
-        padding: 12px 0;
-    }
-
-    .setting-select select {
-        width: 100%;
+        padding: 20px;
     }
 }

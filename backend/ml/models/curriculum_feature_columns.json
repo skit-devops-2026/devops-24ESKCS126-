@@ -1,0 +1,16 @@
+[
+  "problem_rating",
+  "user_median_rating",
+  "rating_gap",
+  "abs_rating_gap",
+  "topic_max_mastery",
+  "topic_mean_mastery",
+  "topic_is_mastered",
+  "topic_solved_count",
+  "topic_saturation_penalty",
+  "is_frontier_topic",
+  "is_struggling_topic",
+  "prereqs_met",
+  "difficulty_tier_match",
+  "problem_tag_count"
+]
