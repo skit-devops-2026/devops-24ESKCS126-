@@ -16,10 +16,10 @@ describe('DSAForge activity data', () => {
     it('returns default stats when no saved data exists', () => {
         const data = getActivityData();
 
-        expect(data.problemsSolved).toBe(124);
-        expect(data.currentStreak).toBe(14);
+        expect(data.problemsSolved).toBe(0);
+        expect(data.currentStreak).toBe(0);
         expect(data.totalMinutes).toBe(0);
-        expect(data.accuracy).toBe(72);
+        expect(data.accuracy).toBe(0);
         expect(data.activities).toEqual([]);
     });
 
@@ -34,7 +34,7 @@ describe('DSAForge activity data', () => {
             initialData
         );
 
-        expect(updatedData.problemsSolved).toBe(125);
+        expect(updatedData.problemsSolved).toBe(1);
         expect(updatedData.totalMinutes).toBe(20);
         expect(updatedData.activities).toHaveLength(1);
         expect(updatedData.activities[0].title).toBe('Two Sum');
@@ -50,7 +50,7 @@ describe('DSAForge activity data', () => {
             localStorage.getItem(STORAGE_KEY)
         );
 
-        expect(savedData.problemsSolved).toBe(125);
+        expect(savedData.problemsSolved).toBe(1);
         expect(savedData.totalMinutes).toBe(15);
         expect(savedData.activities[0].title).toBe('Binary Search');
     });
@@ -75,7 +75,7 @@ describe('DSAForge activity data', () => {
 
         const data = getActivityData();
 
-        expect(data.problemsSolved).toBe(124);
+        expect(data.problemsSolved).toBe(0);
         expect(data.activities).toEqual([]);
     });
 
@@ -89,6 +89,6 @@ describe('DSAForge activity data', () => {
         );
 
         expect(updatedData.totalMinutes).toBe(0);
-        expect(updatedData.problemsSolved).toBe(125);
+        expect(updatedData.problemsSolved).toBe(1);
     });
 });
