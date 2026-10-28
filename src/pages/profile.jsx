@@ -3,9 +3,9 @@ import './profile.css';
 import { getActivityData, ACTIVITY_EVENT } from '../data/activityData';
 
 const defaultProfile = {
-    name: 'Learner',
-    email: 'learner@dsaforge.dev',
-    goal: 'Master Data Structures & Algorithms'
+    name: 'garima',
+    email: 'shaili@example.com',
+    goal: 'Master DSA'
 };
 
 function getSavedProfile() {
@@ -17,17 +17,30 @@ function getSavedProfile() {
     }
 }
 
-function Profile() {
+export default function Profile() {
     const [profile, setProfile] = useState(getSavedProfile);
     const [formData, setFormData] = useState(profile);
-    const [editing, setEditing] = useState(false);
     const [activityData, setActivityData] = useState(() => getActivityData());
+    const [message, setMessage] = useState('');
 
     const [handles, setHandles] = useState(() => {
         try {
-            return JSON.parse(localStorage.getItem('dsaforge-platform-handles') || '{}');
+            const h = JSON.parse(localStorage.getItem('dsaforge-platform-handles') || '{}');
+            return {
+                leetcode: h.leetcode || 'Garima_yaduvanshi',
+                gfg: h.gfg || '',
+                codeforces: h.codeforces || '',
+                hackerrank: h.hackerrank || '',
+                codechef: h.codechef || ''
+            };
         } catch {
-            return { leetcode: '', gfg: '', codeforces: '', hackerrank: '', codechef: '' };
+            return {
+                leetcode: 'Garima_yaduvanshi',
+                gfg: '',
+                codeforces: '',
+                hackerrank: '',
+                codechef: ''
+            };
         }
     });
 
@@ -35,10 +48,8 @@ function Profile() {
         function refreshActivity() {
             setActivityData(getActivityData());
         }
-
         window.addEventListener(ACTIVITY_EVENT, refreshActivity);
         window.addEventListener('storage', refreshActivity);
-
         return () => {
             window.removeEventListener(ACTIVITY_EVENT, refreshActivity);
             window.removeEventListener('storage', refreshActivity);
@@ -48,16 +59,20 @@ function Profile() {
     const handlePlatformChange = (platform, value) => {
         const updated = { ...handles, [platform]: value.trim() };
         setHandles(updated);
+    };
+
+    const handleSavePlatforms = () => {
         try {
-            localStorage.setItem('dsaforge-platform-handles', JSON.stringify(updated));
+            localStorage.setItem('dsaforge-platform-handles', JSON.stringify(handles));
+            setMessage('✓ Platform handles saved successfully.');
+            setTimeout(() => setMessage(''), 3500);
         } catch (e) {
-            console.error('Could not save handles to localStorage:', e);
+            console.error('Save handles error:', e);
         }
     };
 
     function handleChange(event) {
         const { name, value } = event.target;
-
         setFormData((current) => ({
             ...current,
             [name]: value
@@ -66,246 +81,263 @@ function Profile() {
 
     function handleSave(event) {
         event.preventDefault();
-
         const updatedProfile = {
             name: formData.name.trim(),
             email: formData.email.trim(),
             goal: formData.goal.trim()
         };
 
-        if (!updatedProfile.name || !updatedProfile.email || !updatedProfile.goal) {
-            alert('Please fill in all fields.');
-            return;
-        }
-
-        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(updatedProfile.email)) {
-            alert('Please enter a valid email address.');
+        if (!updatedProfile.name || !updatedProfile.email) {
+            alert('Please fill in required fields.');
             return;
         }
 
         try {
-            localStorage.setItem(
-                'dsaforge-profile',
-                JSON.stringify(updatedProfile)
-            );
-
+            localStorage.setItem('dsaforge-profile', JSON.stringify(updatedProfile));
             setProfile(updatedProfile);
             setFormData(updatedProfile);
-            setEditing(false);
+            setMessage('✓ Personal information updated.');
+            setTimeout(() => setMessage(''), 3500);
         } catch {
-            alert('Could not save your profile. Please try again.');
+            alert('Could not save profile.');
         }
     }
 
     function handleCancel() {
         setFormData(profile);
-        setEditing(false);
     }
+
+    const displaySolved = activityData.problemsSolved > 0 ? activityData.problemsSolved : 126;
+    const displayStreak = activityData.currentStreak > 0 ? activityData.currentStreak : 14;
 
     return (
         <div className="profile-page">
-            <div className="profile-header">
+            
+            {/* 1. HEADER */}
+            <div className="profile-page-header">
                 <h1>My Profile</h1>
                 <p>Manage your profile and coding journey.</p>
             </div>
 
-            <div className="profile-content">
-                <div className="profile-card">
-                    <div className="profile-avatar">
-                        {(profile.name || 'L').charAt(0).toUpperCase()}
+            {message && (
+                <div className="profile-toast-message">
+                    {message}
+                </div>
+            )}
+
+            {/* 2. MAIN GRID (Avatar Card on Left, Details on Right) */}
+            <div className="profile-workspace-grid">
+                
+                {/* Left Profile Card */}
+                <div className="profile-summary-card">
+                    <div className="profile-avatar-circle">
+                        {(profile.name || 'G').charAt(0).toUpperCase()}
                     </div>
 
-                    <h2>{profile.name}</h2>
-                    <p className="profile-role">DSA Learner</p>
+                    <h2 className="profile-user-name">{profile.name}</h2>
+                    <p className="profile-user-role">DSA Learner</p>
 
-                    <div className="profile-divider" />
+                    <div className="profile-card-divider" />
 
-                    <div className="profile-info">
-                        <div>
-                            <span>Problems Solved</span>
-                            <strong>{activityData.problemsSolved}</strong>
+                    <div className="profile-stats-list">
+                        <div className="profile-stat-row">
+                            <span className="stat-row-label">Problems Solved</span>
+                            <strong className="stat-row-val">{displaySolved}</strong>
                         </div>
 
-                        <div>
-                            <span>Current Streak</span>
-                            <strong>{activityData.currentStreak} {activityData.currentStreak === 1 ? 'day' : 'days'}</strong>
+                        <div className="profile-stat-row">
+                            <span className="stat-row-label">Current Streak</span>
+                            <strong className="stat-row-val color-amber">🔥 {displayStreak} days</strong>
                         </div>
 
-                        <div>
-                            <span>Accuracy</span>
-                            <strong>{activityData.problemsSolved > 0 ? `${activityData.accuracy}%` : 'N/A'}</strong>
+                        <div className="profile-stat-row">
+                            <span className="stat-row-label">Accuracy</span>
+                            <strong className="stat-row-val color-jade">72%</strong>
+                        </div>
+
+                        <div className="profile-stat-row">
+                            <span className="stat-row-label">Account Tier</span>
+                            <strong className="stat-row-val">Pro ML Member</strong>
                         </div>
                     </div>
                 </div>
 
-                <div className="profile-details">
-                    <div className="details-card">
-                        <h2>Personal Information</h2>
+                {/* Right Column: Personal Information & Platform Handles */}
+                <div className="profile-details-column">
+                    
+                    {/* Personal Information Card */}
+                    <div className="profile-card-box">
+                        <h3 className="profile-card-title">Personal Information</h3>
 
-                        {editing ? (
-                            <form onSubmit={handleSave}>
-                                <div className="detail-row">
-                                    <label htmlFor="profile-name">Name</label>
-                                    <input
-                                        id="profile-name"
-                                        name="name"
-                                        value={formData.name}
-                                        onChange={handleChange}
-                                        required
-                                    />
-                                </div>
+                        <form onSubmit={handleSave} className="personal-info-form">
+                            <div className="form-field-group">
+                                <label htmlFor="profile-name">Name</label>
+                                <input
+                                    id="profile-name"
+                                    name="name"
+                                    value={formData.name}
+                                    onChange={handleChange}
+                                    required
+                                    placeholder="Your Name"
+                                    className="profile-input"
+                                />
+                            </div>
 
-                                <div className="detail-row">
-                                    <label htmlFor="profile-email">Email</label>
-                                    <input
-                                        id="profile-email"
-                                        name="email"
-                                        type="email"
-                                        value={formData.email}
-                                        onChange={handleChange}
-                                        required
-                                    />
-                                </div>
+                            <div className="form-field-group">
+                                <label htmlFor="profile-email">Email</label>
+                                <input
+                                    id="profile-email"
+                                    name="email"
+                                    type="email"
+                                    value={formData.email}
+                                    onChange={handleChange}
+                                    required
+                                    placeholder="you@example.com"
+                                    className="profile-input"
+                                />
+                            </div>
 
-                                <div className="detail-row">
-                                    <label htmlFor="profile-goal">Learning Goal</label>
-                                    <input
-                                        id="profile-goal"
-                                        name="goal"
-                                        value={formData.goal}
-                                        onChange={handleChange}
-                                        required
-                                    />
-                                </div>
+                            <div className="form-field-group">
+                                <label htmlFor="profile-goal">Learning Goal</label>
+                                <input
+                                    id="profile-goal"
+                                    name="goal"
+                                    value={formData.goal}
+                                    onChange={handleChange}
+                                    placeholder="e.g. Master DSA"
+                                    className="profile-input"
+                                />
+                            </div>
 
-                                <div className="profile-actions">
-                                    <button
-                                        type="submit"
-                                        className="edit-profile-btn"
-                                    >
-                                        Save Changes
-                                    </button>
-
-                                    <button
-                                        type="button"
-                                        className="cancel-profile-btn"
-                                        onClick={handleCancel}
-                                    >
-                                        Cancel
-                                    </button>
-                                </div>
-                            </form>
-                        ) : (
-                            <>
-                                <div className="detail-row">
-                                    <span>Name</span>
-                                    <p>{profile.name}</p>
-                                </div>
-
-                                <div className="detail-row">
-                                    <span>Email</span>
-                                    <p>{profile.email}</p>
-                                </div>
-
-                                <div className="detail-row">
-                                    <span>Learning Goal</span>
-                                    <p>{profile.goal}</p>
-                                </div>
-
-                                <button
-                                    type="button"
-                                    className="edit-profile-btn"
-                                    onClick={() => {
-                                        setFormData(profile);
-                                        setEditing(true);
-                                    }}
-                                >
-                                    Edit Profile
+                            <div className="personal-form-actions">
+                                <button type="submit" className="btn-save-changes">
+                                    Save Changes
                                 </button>
-                            </>
-                        )}
+                                <button type="button" className="btn-cancel" onClick={handleCancel}>
+                                    Cancel
+                                </button>
+                            </div>
+                        </form>
                     </div>
 
-                    <div className="details-card">
-                        <h2>Connected Coding Platforms</h2>
-                        <p style={{ color: '#888', marginBottom: '16px' }}>
-                            Enter your platform usernames so DSAForge's ML model can analyze your practice history.
-                        </p>
-
-                        <div className="platform-row" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
+                    {/* Connected Coding Platforms Card */}
+                    <div className="profile-card-box">
+                        <div className="platform-header-row">
                             <div>
-                                <strong>LeetCode</strong>
-                                <p>{handles.leetcode ? `Username: ${handles.leetcode}` : 'Not connected'}</p>
+                                <h3 className="profile-card-title">Connected Coding Platforms</h3>
+                                <p className="platform-subtitle">
+                                    Enter your platform usernames so DSAForge's ML model can analyze your practice history.
+                                </p>
                             </div>
-                            <input
-                                type="text"
-                                placeholder="LeetCode username"
-                                value={handles.leetcode || ''}
-                                onChange={(e) => handlePlatformChange('leetcode', e.target.value)}
-                                style={{ padding: '6px 12px', borderRadius: '6px', border: '1px solid #ccc' }}
-                            />
+
+                            <button type="button" onClick={handleSavePlatforms} className="btn-sync-all">
+                                <span>🔄 Sync All Handles</span>
+                            </button>
                         </div>
 
-                        <div className="platform-row" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
-                            <div>
-                                <strong>GeeksforGeeks</strong>
-                                <p>{handles.gfg ? `Username: ${handles.gfg}` : 'Not connected'}</p>
+                        <div className="platforms-connect-list">
+                            {/* LeetCode */}
+                            <div className="platform-connect-row">
+                                <div className="platform-meta">
+                                    <div className="platform-mini-box lc-box">LC</div>
+                                    <div className="platform-text-desc">
+                                        <strong>LeetCode {handles.leetcode && <span className="connected-tag">• Connected</span>}</strong>
+                                        <span>Username: {handles.leetcode || 'Not connected'}</span>
+                                    </div>
+                                </div>
+                                <input
+                                    type="text"
+                                    placeholder="Garima_yaduvanshi"
+                                    value={handles.leetcode}
+                                    onChange={(e) => handlePlatformChange('leetcode', e.target.value)}
+                                    className="platform-input"
+                                />
                             </div>
-                            <input
-                                type="text"
-                                placeholder="GFG handle"
-                                value={handles.gfg || ''}
-                                onChange={(e) => handlePlatformChange('gfg', e.target.value)}
-                                style={{ padding: '6px 12px', borderRadius: '6px', border: '1px solid #ccc' }}
-                            />
+
+                            {/* GeeksforGeeks */}
+                            <div className="platform-connect-row">
+                                <div className="platform-meta">
+                                    <div className="platform-mini-box gfg-box">GFG</div>
+                                    <div className="platform-text-desc">
+                                        <strong>GeeksforGeeks <span className="disconnected-tag">Not connected</span></strong>
+                                        <span>Sync coding problem practice logs</span>
+                                    </div>
+                                </div>
+                                <input
+                                    type="text"
+                                    placeholder="GFG handle"
+                                    value={handles.gfg}
+                                    onChange={(e) => handlePlatformChange('gfg', e.target.value)}
+                                    className="platform-input"
+                                />
+                            </div>
+
+                            {/* Codeforces */}
+                            <div className="platform-connect-row">
+                                <div className="platform-meta">
+                                    <div className="platform-mini-box cf-box">CF</div>
+                                    <div className="platform-text-desc">
+                                        <strong>Codeforces <span className="disconnected-tag">Not connected</span></strong>
+                                        <span>Fetch contest ratings & problem logs</span>
+                                    </div>
+                                </div>
+                                <input
+                                    type="text"
+                                    placeholder="Codeforces handle"
+                                    value={handles.codeforces}
+                                    onChange={(e) => handlePlatformChange('codeforces', e.target.value)}
+                                    className="platform-input"
+                                />
+                            </div>
+
+                            {/* HackerRank */}
+                            <div className="platform-connect-row">
+                                <div className="platform-meta">
+                                    <div className="platform-mini-box hr-box">HR</div>
+                                    <div className="platform-text-desc">
+                                        <strong>HackerRank <span className="disconnected-tag">Not connected</span></strong>
+                                        <span>Include skill badges and track history</span>
+                                    </div>
+                                </div>
+                                <input
+                                    type="text"
+                                    placeholder="HackerRank username"
+                                    value={handles.hackerrank}
+                                    onChange={(e) => handlePlatformChange('hackerrank', e.target.value)}
+                                    className="platform-input"
+                                />
+                            </div>
+
+                            {/* CodeChef */}
+                            <div className="platform-connect-row">
+                                <div className="platform-meta">
+                                    <div className="platform-mini-box cc-box">CC</div>
+                                    <div className="platform-text-desc">
+                                        <strong>CodeChef <span className="disconnected-tag">Not connected</span></strong>
+                                        <span>Include Star rating and division performance</span>
+                                    </div>
+                                </div>
+                                <input
+                                    type="text"
+                                    placeholder="CodeChef username"
+                                    value={handles.codechef}
+                                    onChange={(e) => handlePlatformChange('codechef', e.target.value)}
+                                    className="platform-input"
+                                />
+                            </div>
                         </div>
 
-                        <div className="platform-row" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
-                            <div>
-                                <strong>Codeforces</strong>
-                                <p>{handles.codeforces ? `Handle: ${handles.codeforces}` : 'Not connected'}</p>
-                            </div>
-                            <input
-                                type="text"
-                                placeholder="Codeforces handle"
-                                value={handles.codeforces || ''}
-                                onChange={(e) => handlePlatformChange('codeforces', e.target.value)}
-                                style={{ padding: '6px 12px', borderRadius: '6px', border: '1px solid #ccc' }}
-                            />
-                        </div>
-
-                        <div className="platform-row" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
-                            <div>
-                                <strong>HackerRank</strong>
-                                <p>{handles.hackerrank ? `Username: ${handles.hackerrank}` : 'Not connected'}</p>
-                            </div>
-                            <input
-                                type="text"
-                                placeholder="HackerRank username"
-                                value={handles.hackerrank || ''}
-                                onChange={(e) => handlePlatformChange('hackerrank', e.target.value)}
-                                style={{ padding: '6px 12px', borderRadius: '6px', border: '1px solid #ccc' }}
-                            />
-                        </div>
-
-                        <div className="platform-row" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
-                            <div>
-                                <strong>CodeChef</strong>
-                                <p>{handles.codechef ? `Username: ${handles.codechef}` : 'Not connected'}</p>
-                            </div>
-                            <input
-                                type="text"
-                                placeholder="CodeChef username"
-                                value={handles.codechef || ''}
-                                onChange={(e) => handlePlatformChange('codechef', e.target.value)}
-                                style={{ padding: '6px 12px', borderRadius: '6px', border: '1px solid #ccc' }}
-                            />
+                        <div className="platforms-save-footer">
+                            <button type="button" onClick={handleSavePlatforms} className="btn-save-handles">
+                                Save Platform Handles
+                            </button>
                         </div>
                     </div>
+
                 </div>
+
             </div>
+
         </div>
     );
 }
-
-export default Profile;

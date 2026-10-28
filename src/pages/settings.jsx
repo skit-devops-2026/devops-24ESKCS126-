@@ -5,8 +5,8 @@ import './settings.css';
 const DEFAULT_SETTINGS = {
     dailyReminder: true,
     progressUpdates: true,
-    difficulty: 'medium',
-    platform: 'leetcode'
+    difficulty: 'Medium',
+    platform: 'LeetCode'
 };
 
 function getSavedSettings() {
@@ -18,7 +18,7 @@ function getSavedSettings() {
     }
 }
 
-function Settings() {
+export default function Settings() {
     const navigate = useNavigate();
     const [settings, setSettings] = useState(getSavedSettings);
     const [message, setMessage] = useState('');
@@ -55,128 +55,134 @@ function Settings() {
 
     return (
         <div className="settings-page">
-
-            <div className="settings-header">
+            
+            {/* HEADER */}
+            <div className="settings-page-header">
                 <h1>Settings</h1>
                 <p>Manage your preferences and account settings.</p>
             </div>
 
             {message && (
-                <div className="settings-message">
+                <div className="settings-toast-message">
                     <span>{message}</span>
-                    <button onClick={() => setMessage('')}>×</button>
+                    <button type="button" className="close-toast-btn" onClick={() => setMessage('')}>×</button>
                 </div>
             )}
 
-            <div className="settings-container">
+            <div className="settings-sections-grid">
+                
+                {/* 1. General Preferences Card */}
+                <div className="settings-card-box">
+                    <h3 className="settings-box-title">General</h3>
 
-                <div className="settings-card">
-                    <h2>General</h2>
-
-                    <div className="setting-row">
-                        <div>
-                            <h3>Daily Practice Reminder</h3>
+                    <div className="setting-toggle-row">
+                        <div className="toggle-info-text">
+                            <strong>Daily Practice Reminder</strong>
                             <p>Get reminded to maintain your coding practice.</p>
                         </div>
 
-                        <label className="toggle">
+                        <label className="warm-toggle-switch">
                             <input
                                 type="checkbox"
                                 checked={settings.dailyReminder}
                                 onChange={(e) => updateSetting('dailyReminder', e.target.checked)}
                             />
-                            <span></span>
+                            <span className="toggle-slider"></span>
                         </label>
                     </div>
 
-                    <div className="setting-row">
-                        <div>
-                            <h3>Progress Updates</h3>
+                    <div className="setting-toggle-row">
+                        <div className="toggle-info-text">
+                            <strong>Progress Updates</strong>
                             <p>Receive updates about your learning progress.</p>
                         </div>
 
-                        <label className="toggle">
+                        <label className="warm-toggle-switch">
                             <input
                                 type="checkbox"
                                 checked={settings.progressUpdates}
                                 onChange={(e) => updateSetting('progressUpdates', e.target.checked)}
                             />
-                            <span></span>
+                            <span className="toggle-slider"></span>
                         </label>
                     </div>
                 </div>
 
-                <div className="settings-card">
-                    <h2>Learning Preferences</h2>
+                {/* 2. Learning Preferences Card */}
+                <div className="settings-card-box">
+                    <h3 className="settings-box-title">Learning Preferences</h3>
 
-                    <div className="setting-select">
-                        <label>Difficulty Preference</label>
-
+                    <div className="setting-field-row">
+                        <label className="field-row-label">Difficulty Preference</label>
                         <select 
                             value={settings.difficulty}
                             onChange={(e) => updateSetting('difficulty', e.target.value)}
+                            className="settings-select-dropdown"
                         >
-                            <option value="easy">Easy</option>
-                            <option value="medium">Medium</option>
-                            <option value="hard">Hard</option>
+                            <option value="Easy">Easy</option>
+                            <option value="Medium">Medium</option>
+                            <option value="Hard">Hard</option>
                         </select>
                     </div>
 
-                    <div className="setting-select">
-                        <label>Preferred Platform</label>
-
+                    <div className="setting-field-row">
+                        <label className="field-row-label">Preferred Platform</label>
                         <select 
                             value={settings.platform}
                             onChange={(e) => updateSetting('platform', e.target.value)}
+                            className="settings-select-dropdown"
                         >
-                            <option value="leetcode">LeetCode</option>
-                            <option value="hackerrank">HackerRank</option>
-                            <option value="codeforces">Codeforces</option>
-                            <option value="codechef">CodeChef</option>
-                            <option value="gfg">GeeksforGeeks</option>
+                            <option value="LeetCode">LeetCode</option>
+                            <option value="Codeforces">Codeforces</option>
+                            <option value="GeeksforGeeks">GeeksforGeeks</option>
+                            <option value="HackerRank">HackerRank</option>
+                            <option value="CodeChef">CodeChef</option>
                         </select>
                     </div>
                 </div>
 
-                <div className="settings-card">
-                    <h2>Account & Integrations</h2>
-
-                    <div className="account-action">
-                        <div>
-                            <h3>Connected Platforms</h3>
-                            <p>Manage your competitive programming handles (LeetCode, Codeforces, GFG).</p>
+                {/* 3. Connected Coding Accounts */}
+                <div className="settings-card-box">
+                    <div className="connected-accounts-row">
+                        <div className="connected-info-text">
+                            <h3 className="settings-box-title" style={{ margin: '0 0 4px' }}>Connected Coding Accounts</h3>
+                            <p className="connected-subtext">Manage LeetCode, Codeforces, HackerRank and CodeChef</p>
                         </div>
 
                         <button 
                             type="button"
                             onClick={() => navigate('/profile')}
+                            className="btn-open-handles"
                         >
-                            Manage on Profile →
+                            Open Profile Handles
                         </button>
                     </div>
 
-                    <div className="account-action" style={{ borderBottom: isChangingPassword ? 'none' : '' }}>
+                    <div className="security-divider" />
+
+                    <div className="account-action-row">
                         <div>
-                            <h3>Change Password</h3>
-                            <p>Update your account security credentials.</p>
+                            <strong>Change Password</strong>
+                            <p className="account-action-sub">Update your account login credentials</p>
                         </div>
 
                         <button 
                             type="button"
                             onClick={() => setIsChangingPassword(!isChangingPassword)}
+                            className="btn-action-outline"
                         >
                             {isChangingPassword ? 'Cancel' : 'Change'}
                         </button>
                     </div>
 
                     {isChangingPassword && (
-                        <form onSubmit={handlePasswordSubmit} style={{ marginTop: '16px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                        <form onSubmit={handlePasswordSubmit} className="change-pass-form">
                             <input
                                 type="password"
                                 placeholder="Current password"
                                 value={passwords.current}
                                 onChange={(e) => setPasswords(p => ({ ...p, current: e.target.value }))}
-                                style={{ padding: '8px 12px', borderRadius: '7px', border: '1px solid #e2e8f0', fontSize: '13px' }}
+                                className="settings-input"
                                 required
                             />
                             <input
@@ -184,13 +190,10 @@ function Settings() {
                                 placeholder="New password (min 6 characters)"
                                 value={passwords.newPass}
                                 onChange={(e) => setPasswords(p => ({ ...p, newPass: e.target.value }))}
-                                style={{ padding: '8px 12px', borderRadius: '7px', border: '1px solid #e2e8f0', fontSize: '13px' }}
+                                className="settings-input"
                                 required
                             />
-                            <button
-                                type="submit"
-                                style={{ alignSelf: 'flex-start', padding: '8px 18px', background: '#4f46e5', color: '#fff', border: 'none', borderRadius: '7px', cursor: 'pointer', fontSize: '13px', fontWeight: 600 }}
-                            >
+                            <button type="submit" className="btn-update-pass">
                                 Update Password
                             </button>
                         </form>
@@ -202,5 +205,3 @@ function Settings() {
         </div>
     );
 }
-
-export default Settings;

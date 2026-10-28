@@ -1,111 +1,63 @@
 import './topbar.css';
-import { Link, useNavigate } from "react-router-dom";
+import { NavLink, Link, useNavigate } from "react-router-dom";
 import { useState, useEffect, useRef } from 'react';
 import { getActivityData, ACTIVITY_EVENT } from '../data/activityData';
+import { MdNotifications, MdKeyboardArrowDown } from 'react-icons/md';
 
-import {
-    MdNotifications,
-    MdKeyboardArrowDown
-} from 'react-icons/md';
+const THEMES = [
+    { id: 'warm-cashmere', label: 'Warm Cashmere & Jade', icon: '🌱' },
+    { id: 'sandstone-indigo', label: 'Sandstone & Royal Indigo', icon: '🔷' },
+    { id: 'tuscan-sage', label: 'Tuscan Alabaster & Sage', icon: '🌿' }
+];
 
-function generateNotifications() {
-    let handles = {};
-    try {
-        handles = JSON.parse(localStorage.getItem('dsaforge-platform-handles') || '{}');
-    } catch {
-        handles = {};
-    }
-
-    const activity = getActivityData();
-    const connectedPlatforms = Object.entries(handles)
-        .filter(([, v]) => typeof v === 'string' && v.trim().length > 0)
-        .map(([k]) => k.charAt(0).toUpperCase() + k.slice(1));
-
-    const notifs = [];
-
-    // 1. Platform status
-    if (connectedPlatforms.length > 0) {
-        notifs.push({
-            id: 'notif-platforms-connected',
-            title: 'Platforms Synchronized',
-            message: `Telemetry active for ${connectedPlatforms.join(', ')}.`,
-            time: 'Active'
-        });
-    } else {
-        notifs.push({
-            id: 'notif-connect-platforms',
-            title: 'Connect Coding Platforms',
-            message: 'Link your LeetCode, Codeforces, or GFG handles in Profile for AI recommendations.',
-            time: 'Action needed'
-        });
-    }
-
-    // 2. Milestone / Solved status
-    if (activity.problemsSolved > 0) {
-        notifs.push({
-            id: `notif-milestone-${activity.problemsSolved}`,
-            title: 'Practice Progress',
-            message: `You have solved ${activity.problemsSolved} problem${activity.problemsSolved === 1 ? '' : 's'} across your journey.`,
-            time: 'Recent'
-        });
-    } else {
-        notifs.push({
-            id: 'notif-welcome',
-            title: 'Welcome to DSAForge!',
-            message: 'Explore the Overview page and start your personalized curriculum.',
-            time: 'Just now'
-        });
-    }
-
-    // 3. Streak
-    if (activity.currentStreak > 0) {
-        notifs.push({
-            id: `notif-streak-${activity.currentStreak}`,
-            title: `🔥 ${activity.currentStreak}-Day Practice Streak!`,
-            message: 'Solve a problem today to keep your consistency momentum going.',
-            time: 'Today'
-        });
-    } else {
-        notifs.push({
-            id: 'notif-streak-start',
-            title: 'Start a Streak Today 🔥',
-            message: 'Solve at least one problem today to initiate your daily streak counter.',
-            time: 'Today'
-        });
-    }
-
-    return notifs;
-}
-
-function Topbar() {
+export default function Topbar() {
     const navigate = useNavigate();
+
+    // 1. Theme State
+    const [theme, setTheme] = useState(() => {
+        try {
+            return localStorage.getItem('dsaforge-theme') || 'warm-cashmere';
+        } catch {
+            return 'warm-cashmere';
+        }
+    });
+
+    const [isThemeMenuOpen, setIsThemeMenuOpen] = useState(false);
     const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
     const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
 
+    const themeRef = useRef(null);
     const notifRef = useRef(null);
     const profileRef = useRef(null);
 
+    // Synchronize data-theme on html element
+    useEffect(() => {
+        document.documentElement.setAttribute('data-theme', theme);
+        try {
+            localStorage.setItem('dsaforge-theme', theme);
+        } catch {
+            // ignore
+        }
+    }, [theme]);
+
+    // 2. User Profile State
     const [userProfile, setUserProfile] = useState(() => {
         try {
-            return JSON.parse(localStorage.getItem('dsaforge-profile') || '{"name": "Learner", "email": "learner@dsaforge.dev"}');
+            return JSON.parse(
+                localStorage.getItem('dsaforge-profile') ||
+                '{"name": "garima", "email": "shaili@example.com"}'
+            );
         } catch {
-            return { name: "Learner", email: "learner@dsaforge.dev" };
+            return { name: "garima", email: "shaili@example.com" };
         }
     });
 
-    const [readNotifs, setReadNotifs] = useState(() => {
-        try {
-            return JSON.parse(localStorage.getItem('dsaforge-read-notifications') || '[]');
-        } catch {
-            return [];
-        }
-    });
-
-    const [notificationList, setNotificationList] = useState(generateNotifications);
+    // 3. Activity & Solved Counts for dynamic badges
+    const [activity, setActivity] = useState(() => getActivityData());
 
     useEffect(() => {
         function handleUpdate() {
-            setNotificationList(generateNotifications());
+            setActivity(getActivityData());
             try {
                 const saved = JSON.parse(localStorage.getItem('dsaforge-profile') || '{}');
                 if (saved.name) setUserProfile(saved);
@@ -123,9 +75,12 @@ function Topbar() {
         };
     }, []);
 
-    // Close menus when clicking outside
+    // 4. Click outside handler to dismiss all popovers
     useEffect(() => {
         function handleClickOutside(event) {
+            if (themeRef.current && !themeRef.current.contains(event.target)) {
+                setIsThemeMenuOpen(false);
+            }
             if (notifRef.current && !notifRef.current.contains(event.target)) {
                 setIsNotificationsOpen(false);
             }
@@ -140,182 +95,241 @@ function Topbar() {
         };
     }, []);
 
-    const notifications = notificationList.map(n => ({
-        ...n,
-        read: readNotifs.includes(n.id)
-    }));
+    const handleSelectTheme = (themeId) => {
+        setTheme(themeId);
+        setIsThemeMenuOpen(false);
+    };
 
-    const unreadCount = notifications.filter(
-        (notification) => !notification.read
-    ).length;
-
-    function markAllAsRead() {
-        const allIds = notifications.map((n) => n.id);
-        const updated = Array.from(new Set([...readNotifs, ...allIds]));
-        setReadNotifs(updated);
-        try {
-            localStorage.setItem('dsaforge-read-notifications', JSON.stringify(updated));
-        } catch (e) {
-            console.error('Could not save read notifications:', e);
-        }
-    }
-
-    function handleLogout() {
+    const handleLogout = () => {
         try {
             localStorage.removeItem('dsaforge-auth');
         } catch (e) {
-            console.error('Could not log out:', e);
+            console.error('Logout error:', e);
         }
         setIsProfileMenuOpen(false);
         navigate('/');
-    }
+    };
+
+    const currentThemeObj = THEMES.find(t => t.id === theme) || THEMES[0];
+
+    // Notifications matching screenshot design
+    const notifications = [
+        {
+            id: 'notif-1',
+            title: 'LightGBM Curriculum Updated',
+            message: 'New problem recommendations generated for your 1100 target.',
+            time: '12m ago',
+            read: false
+        },
+        {
+            id: 'notif-2',
+            title: '14-Day Streak Milestone! 🔥',
+            message: 'You are in the top 8% consistency tier this month.',
+            time: '1h ago',
+            read: false
+        }
+    ];
 
     return (
         <header className="topbar">
+            {/* LEFT: BRAND LOGO & ML PILL */}
+            <div className="topbar-left">
+                <Link to="/overview" className="logo">
+                    <div className="brand-logo-badge">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M12 2L2 7L12 12L22 7L12 2Z" />
+                            <path d="M2 17L12 22L22 17" />
+                            <path d="M2 12L12 17L22 12" />
+                        </svg>
+                    </div>
+                    <span className="logo-text">DSA<span className="logo-accent">Forge</span></span>
+                </Link>
 
-            <Link to="/overview" className="logo">
-                <div className="brand-logo-badge">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M12 2L2 7L12 12L22 7L12 2Z" />
-                        <path d="M2 17L12 22L22 17" />
-                        <path d="M2 12L12 17L22 12" />
-                    </svg>
-                </div>
-                <span className="logo-text">DSA<span className="logo-accent">Forge</span></span>
-            </Link>
+                <span className="ml-version-pill">ML v2.4</span>
+            </div>
 
-            <div className="rightbar">
+            {/* CENTER: SEGMENTED NAVIGATION PILLS */}
+            <nav className="topbar-nav">
+                <NavLink 
+                    to="/overview" 
+                    className={({ isActive }) => `nav-pill ${isActive ? 'active' : ''}`}
+                >
+                    Overview
+                </NavLink>
 
-                {/* 1. NOTIFICATIONS WRAPPER */}
-                <div className="notification-wrapper" ref={notifRef}>
+                <NavLink 
+                    to="/my-skill-map" 
+                    className={({ isActive }) => `nav-pill ${isActive ? 'active' : ''}`}
+                >
+                    My Skill Map
+                </NavLink>
+
+                <NavLink 
+                    to="/recommendations" 
+                    className={({ isActive }) => `nav-pill ${isActive ? 'active' : ''}`}
+                >
+                    <span>Recommendations</span>
+                    <span className="nav-badge-count">28</span>
+                </NavLink>
+
+                <NavLink 
+                    to="/activity" 
+                    className={({ isActive }) => `nav-pill ${isActive ? 'active' : ''}`}
+                >
+                    Activity
+                </NavLink>
+
+                <NavLink 
+                    to="/setting" 
+                    className={({ isActive }) => `nav-pill ${isActive ? 'active' : ''}`}
+                >
+                    Settings
+                </NavLink>
+            </nav>
+
+            {/* RIGHT: THEME SWITCHER + NOTIFICATIONS + PROFILE */}
+            <div className="topbar-right">
+                
+                {/* 1. Theme Selector Popover */}
+                <div className="theme-wrapper" ref={themeRef}>
                     <button
                         type="button"
-                        className="notification-button"
-                        aria-label={`Notifications, ${unreadCount} unread`}
-                        aria-expanded={isNotificationsOpen}
+                        className="theme-btn"
                         onClick={() => {
-                            setIsNotificationsOpen(prev => !prev);
+                            setIsThemeMenuOpen(prev => !prev);
+                            setIsNotificationsOpen(false);
                             setIsProfileMenuOpen(false);
                         }}
+                        aria-expanded={isThemeMenuOpen}
+                        title="Switch theme color scheme"
                     >
-                        <MdNotifications className="topbar-icon" />
-
-                        {unreadCount > 0 && (
-                            <span className="notification-badge" />
-                        )}
+                        <span className="theme-btn-content">
+                            <span>{currentThemeObj.icon}</span>
+                            <span className="theme-label">{currentThemeObj.label}</span>
+                        </span>
+                        <MdKeyboardArrowDown className="chevron-icon" />
                     </button>
 
-                    {isNotificationsOpen && (
-                        <section
-                            className="notification-panel"
-                            aria-label="Notifications"
-                        >
-                            <div className="notification-panel-header">
-                                <h2>Notifications</h2>
-
-                                {unreadCount > 0 && (
-                                    <button
-                                        type="button"
-                                        className="mark-read-button"
-                                        onClick={markAllAsRead}
-                                    >
-                                        Mark all as read
-                                    </button>
-                                )}
+                    {isThemeMenuOpen && (
+                        <div className="theme-dropdown-panel">
+                            <div className="theme-panel-header">
+                                WARM ELEGANT SCHEMES
                             </div>
-
-                            {notifications.length > 0 ? (
-                                <div className="notification-list">
-                                    {notifications.map((notification) => (
-                                        <article
-                                            key={notification.id}
-                                            className={`notification-item ${
-                                                notification.read ? 'read' : 'unread'
-                                            }`}
+                            <div className="theme-options-list">
+                                {THEMES.map((item) => {
+                                    const isSelected = item.id === theme;
+                                    return (
+                                        <button
+                                            key={item.id}
+                                            type="button"
+                                            className={`theme-option-row ${isSelected ? 'selected' : ''}`}
+                                            onClick={() => handleSelectTheme(item.id)}
                                         >
-                                            <div className="notification-item-heading">
-                                                <h3>{notification.title}</h3>
-
-                                                {!notification.read && (
-                                                    <span className="unread-dot" />
-                                                )}
-                                            </div>
-
-                                            <p>{notification.message}</p>
-                                            <span className="notification-time">
-                                                {notification.time}
+                                            <span className="theme-option-name">
+                                                {item.label}
                                             </span>
-                                        </article>
-                                    ))}
-                                </div>
-                            ) : (
-                                <p className="no-notifications">
-                                    You're all caught up!
-                                </p>
-                            )}
-                        </section>
+                                            {isSelected && <span className="theme-check">✓</span>}
+                                        </button>
+                                    );
+                                })}
+                            </div>
+                        </div>
                     )}
                 </div>
 
-                {/* 2. PROFILE MENU WRAPPER */}
+                {/* 2. Notification Popover */}
+                <div className="notification-wrapper" ref={notifRef}>
+                    <button
+                        type="button"
+                        className="notification-btn"
+                        aria-label="Notifications"
+                        onClick={() => {
+                            setIsNotificationsOpen(prev => !prev);
+                            setIsThemeMenuOpen(false);
+                            setIsProfileMenuOpen(false);
+                        }}
+                    >
+                        <MdNotifications className="bell-icon" />
+                        <span className="notification-badge-dot">2</span>
+                    </button>
+
+                    {isNotificationsOpen && (
+                        <div className="notification-dropdown-panel">
+                            <div className="notif-panel-header">
+                                <h3>Notifications</h3>
+                                <span className="notif-count-badge">2 New</span>
+                            </div>
+
+                            <div className="notif-items-list">
+                                {notifications.map((n) => (
+                                    <div key={n.id} className="notif-card-item">
+                                        <h4>{n.title}</h4>
+                                        <p>{n.message}</p>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+                </div>
+
+                {/* 3. User Profile Dropdown */}
                 <div className="profile-wrapper" ref={profileRef}>
                     <button
                         type="button"
-                        className="profile-button"
+                        className="profile-pill-btn"
                         onClick={() => {
                             setIsProfileMenuOpen(prev => !prev);
+                            setIsThemeMenuOpen(false);
                             setIsNotificationsOpen(false);
                         }}
                         aria-expanded={isProfileMenuOpen}
                     >
-                        <div className="profile-initial-badge">
-                            {(userProfile.name || 'L').charAt(0).toUpperCase()}
+                        <div className="avatar-circle">
+                            {(userProfile.name || 'G').charAt(0).toUpperCase()}
                         </div>
-                        <span className="profile-name-preview">{userProfile.name}</span>
-                        <MdKeyboardArrowDown 
-                            className="dropdown-icon" 
-                            style={{ transform: isProfileMenuOpen ? 'rotate(180deg)' : 'none' }}
-                        />
+                        <span className="profile-name-text">
+                            {userProfile.name || 'garima'}
+                        </span>
+                        <MdKeyboardArrowDown className="chevron-icon" />
                     </button>
 
                     {isProfileMenuOpen && (
                         <div className="profile-dropdown-panel">
-                            <div className="profile-user-summary">
-                                <strong>{userProfile.name}</strong>
-                                <span>{userProfile.email}</span>
+                            <div className="profile-header-summary">
+                                <strong>{userProfile.name || 'garima'}</strong>
+                                <span>{userProfile.email || 'shaili@example.com'}</span>
                             </div>
 
-                            <Link 
-                                to="/profile" 
-                                className="profile-menu-item"
-                                onClick={() => setIsProfileMenuOpen(false)}
-                            >
-                                <span>👤</span> My Profile
-                            </Link>
+                            <div className="profile-menu-links">
+                                <Link 
+                                    to="/profile" 
+                                    className="menu-link-row"
+                                    onClick={() => setIsProfileMenuOpen(false)}
+                                >
+                                    <span className="menu-icon">👤</span> My Profile
+                                </Link>
 
-                            <Link 
-                                to="/setting" 
-                                className="profile-menu-item"
-                                onClick={() => setIsProfileMenuOpen(false)}
-                            >
-                                <span>⚙️</span> Settings
-                            </Link>
+                                <Link 
+                                    to="/setting" 
+                                    className="menu-link-row"
+                                    onClick={() => setIsProfileMenuOpen(false)}
+                                >
+                                    <span className="menu-icon">⚙️</span> Settings
+                                </Link>
 
-                            <button 
-                                type="button" 
-                                className="profile-menu-item logout"
-                                onClick={handleLogout}
-                            >
-                                <span>🚪</span> Log Out
-                            </button>
+                                <button 
+                                    type="button" 
+                                    className="menu-link-row logout-row"
+                                    onClick={handleLogout}
+                                >
+                                    <span className="menu-icon">🚪</span> Log Out
+                                </button>
+                            </div>
                         </div>
                     )}
                 </div>
 
             </div>
-
         </header>
     );
 }
-
-export default Topbar;

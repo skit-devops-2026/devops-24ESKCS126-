@@ -1,288 +1,396 @@
 .skill-map-page {
-    min-height: calc(100vh - 70px);
-    padding: 24px 32px 40px;
-    background: #f8fafc;
-    color: #0f172a;
-    max-width: 1300px;
-    margin: 0 auto;
-}
-
-/* =========================
-   1. TOP ANALYTICS KPI BAR
-========================= */
-
-.curriculum-kpi-bar {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 16px;
-    margin-bottom: 20px;
-}
-
-.kpi-card {
-    background: #ffffff;
-    border: 1px solid #e2e8f0;
-    border-radius: 14px;
-    padding: 14px 18px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 20px;
 }
 
-.kpi-label {
-    font-size: 11.5px;
-    font-weight: 600;
-    color: #64748b;
+/* 1. TOP CURRICULUM ANALYTICS BANNER */
+.skill-kpi-bar {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+}
+
+.skill-kpi-card {
+    background: #ffffff;
+    border: 1px solid var(--border-subtle);
+    border-radius: 18px;
+    padding: 18px 22px;
+    box-shadow: 0 1px 3px rgba(35, 30, 20, 0.04);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 90px;
+}
+
+.skill-kpi-label {
+    font-size: 11px;
+    font-weight: 800;
+    color: #727671;
+    letter-spacing: 0.6px;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
+    margin-bottom: 6px;
 }
 
-.kpi-highlight {
-    font-size: 14.5px;
-    color: #0f172a;
-    font-weight: 700;
-}
-
-.progress-wrapper {
+.skill-progress-row {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
 }
 
-.progress-bar-bg {
+.skill-progress-track {
     flex: 1;
-    height: 7px;
-    background: #f1f5f9;
-    border-radius: 999px;
+    height: 8px;
+    background: #ede8dc;
+    border-radius: 9999px;
     overflow: hidden;
 }
 
-.progress-bar-fill {
+.skill-progress-fill {
+    background: var(--jade, #059669);
     height: 100%;
-    background: linear-gradient(90deg, #10b981 0%, #059669 100%);
-    border-radius: 999px;
-    transition: width 0.4s ease;
+    border-radius: 9999px;
 }
 
-.kpi-value {
+.skill-progress-pct {
     font-size: 13px;
     font-weight: 700;
-    color: #059669;
+    color: #191c1a;
 }
 
-/* =========================================
-   2. SPLIT WORKSPACE: CANVAS + DRAWER
-========================================= */
-
-.skill-map-workspace {
-    display: flex;
-    gap: 20px;
-    height: 600px;
+.skill-kpi-highlight {
+    font-size: 16px;
+    font-weight: 800;
+    color: #191c1a;
+    line-height: 1.2;
 }
 
-.mindmap-container {
-    flex: 1;
-    position: relative;
-    background: #ffffff;
-    border-radius: 16px;
-    overflow: hidden;
-    border: 1px solid #e2e8f0;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+.rating-purple {
+    color: #7c3aed;
 }
 
-.canvas-header-bar {
-    position: absolute;
-    top: 14px;
-    left: 18px;
-    right: 18px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    z-index: 5;
-    pointer-events: none;
-}
-
-.hint-text {
-    background: rgba(255, 255, 255, 0.92);
-    padding: 6px 14px;
-    border-radius: 20px;
+.skill-small-sub {
     font-size: 12px;
     font-weight: 600;
-    color: #475569;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-    border: 1px solid #e2e8f0;
+    color: #7b807a;
 }
 
-.skill-legend {
+.frontier-green {
+    color: var(--jade, #059669);
+}
+
+/* 2. ROADMAP SUBHEADER */
+.roadmap-subheader-row {
     display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
     gap: 12px;
-    background: rgba(255, 255, 255, 0.95);
-    padding: 6px 14px;
-    border-radius: 12px;
-    border: 1px solid #e2e8f0;
-    pointer-events: auto;
+    padding: 2px 4px;
+}
+
+.hint-pill {
+    font-size: 13px;
+    color: #5d625c;
+    font-weight: 500;
+}
+
+.roadmap-legend {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    font-size: 12.5px;
+    color: #606560;
 }
 
 .legend-item {
     display: flex;
     align-items: center;
     gap: 6px;
-    font-size: 12px;
-    font-weight: 600;
-    color: #475569;
 }
 
-.dot { width: 8px; height: 8px; border-radius: 50%; }
-.dot-mastered { background: #10b981; }
-.dot-focus { background: #4f46e5; }
-.dot-locked { background: #94a3b8; }
+.legend-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+}
 
-/* =========================================
-   3. TOPIC INSPECTOR PANEL
-========================================= */
+.dot-green {
+    background: #059669;
+}
 
-.topic-inspector-panel {
-    width: 330px;
-    background: #ffffff;
-    border-radius: 16px;
-    border: 1px solid #e2e8f0;
-    padding: 22px;
+.dot-blue {
+    background: #2563eb;
+}
+
+.dot-gray {
+    background: #9ca3af;
+}
+
+/* 3. MAIN WORKSPACE */
+.skill-workspace-grid {
+    display: grid;
+    grid-template-columns: 1fr 360px;
+    gap: 22px;
+    align-items: start;
+}
+
+.roadmap-tiers-column {
     display: flex;
     flex-direction: column;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
-    overflow-y: auto;
+    gap: 22px;
 }
 
-.inspector-header {
-    border-bottom: 1px solid #f1f5f9;
-    padding-bottom: 14px;
-    margin-bottom: 14px;
+.tier-section {
+    display: flex;
+    flex-direction: column;
 }
 
-.inspector-tier {
+.tier-heading {
     font-size: 11px;
+    font-weight: 800;
+    color: #7a7f79;
+    letter-spacing: 0.8px;
+    margin: 0 0 10px;
     text-transform: uppercase;
+}
+
+.tier-cards-grid {
+    display: grid;
+    gap: 14px;
+}
+
+.grid-2-col {
+    grid-template-columns: repeat(2, 1fr);
+}
+
+.grid-3-col {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.tier-card {
+    background: #ffffff;
+    border: 1px solid var(--border-subtle);
+    border-radius: 18px;
+    padding: 18px 20px;
+    box-shadow: 0 1px 3px rgba(35, 30, 20, 0.04);
+    cursor: pointer;
+    transition: all 0.15s ease;
+    box-sizing: border-box;
+}
+
+.tier-card:hover {
+    transform: translateY(-2px);
+    border-color: #d1cbbe;
+    box-shadow: 0 6px 16px rgba(35, 30, 20, 0.06);
+}
+
+.tier-card.selected {
+    border: 2px solid #191c1a;
+    box-shadow: 0 4px 14px rgba(35, 30, 20, 0.08);
+}
+
+.tier-card-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+}
+
+.level-pill {
+    font-size: 10.5px;
     font-weight: 700;
-    color: #64748b;
+    color: #7b807a;
     letter-spacing: 0.5px;
 }
 
-.inspector-header h2 {
-    margin: 4px 0 0 0;
-    font-size: 20px;
-    color: #0f172a;
+.focus-status-pill {
+    font-size: 11px;
     font-weight: 700;
-    letter-spacing: -0.3px;
+    padding: 2px 8px;
+    border-radius: 9999px;
 }
 
-.inspector-section {
-    margin-bottom: 16px;
+.next-focus {
+    background: #eff6ff;
+    color: #2563eb;
 }
 
-.inspector-section h4 {
-    margin: 0 0 8px 0;
-    font-size: 12.5px;
-    color: #0f172a;
-    font-weight: 600;
+.up-next {
+    background: #f5f2ea;
+    color: #696e68;
 }
 
-.inspector-desc {
-    font-size: 13px;
-    color: #475569;
-    line-height: 1.5;
+.lock-icon {
+    font-size: 12px;
+    color: #9ca3af;
+}
+
+.tier-card-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: #191c1a;
+    margin: 0 0 6px;
+}
+
+.tier-card-desc {
+    font-size: 12px;
+    color: #696e68;
+    line-height: 1.45;
     margin: 0;
 }
 
-.pattern-tags-list {
+.tier-card.locked {
+    background: #fbf9f4;
+    border: 1px solid #ebe5d8;
+    min-height: 84px;
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    justify-content: space-between;
 }
 
-.pattern-chip {
-    background: #f8fafc;
-    border: 1px solid #e2e8f0;
-    padding: 6px 10px;
-    border-radius: 7px;
-    font-size: 12px;
+.tier-card.locked .tier-card-title {
+    font-size: 13.5px;
+    color: #3b403a;
+    margin: 0;
+}
+
+/* TOPIC INSPECTOR PANEL (RIGHT) */
+.inspector-panel-card {
+    background: #ffffff;
+    border: 1px solid var(--border-subtle);
+    border-radius: 20px;
+    padding: 24px 26px;
+    box-shadow: 0 1px 3px rgba(35, 30, 20, 0.04);
+}
+
+.inspector-badges-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+}
+
+.inspector-tier-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: #767b75;
+    letter-spacing: 0.5px;
+}
+
+.inspector-focus-tag {
+    background: #eff6ff;
+    color: #2563eb;
+    font-size: 10.5px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 9999px;
+}
+
+.inspector-topic-title {
+    font-size: 24px;
+    font-weight: 800;
+    color: #191c1a;
+    margin: 0 0 10px;
+    letter-spacing: -0.4px;
+}
+
+.inspector-topic-desc {
+    font-size: 13px;
+    color: #5d625c;
+    line-height: 1.5;
+    margin: 0 0 20px;
+}
+
+.inspector-section-block {
+    margin-bottom: 18px;
+}
+
+.inspector-block-heading {
+    font-size: 13px;
+    font-weight: 700;
+    color: #191c1a;
+    margin: 0 0 10px;
+}
+
+.inspector-patterns-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.pattern-row-card {
+    background: #fbf9f4;
+    border: 1px solid var(--border-subtle);
+    border-radius: 10px;
+    padding: 10px 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 13px;
     font-weight: 500;
-    color: #334155;
+    color: #191c1a;
 }
 
-.inspector-footer {
-    margin-top: auto;
-    padding-top: 14px;
+.chevron-right {
+    color: #9da29c;
+    font-weight: bold;
 }
 
-.practice-topic-btn {
+.prereq-block {
+    background: #fbf9f4;
+    border: 1px solid var(--border-subtle);
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-size: 12.5px;
+}
+
+.prereq-label {
+    font-weight: 700;
+    color: #191c1a;
+    margin-right: 6px;
+}
+
+.prereq-value {
+    color: #555a54;
+}
+
+.inspector-action-wrap {
+    margin-top: 20px;
+}
+
+.btn-practice-topic {
     display: block;
     text-align: center;
-    background: #4f46e5;
-    color: white;
-    font-weight: 600;
-    font-size: 13px;
-    padding: 10px 16px;
-    border-radius: 8px;
+    background: #191c1a;
+    color: #ffffff;
     text-decoration: none;
-    transition: background 0.15s ease, transform 0.15s ease;
-}
-
-.practice-topic-btn:hover {
-    background: #4338ca;
-    transform: translateY(-1px);
-}
-
-/* =========================================
-   4. REACT FLOW NODE STYLING
-========================================= */
-
-.curriculum-node {
-    background: #ffffff;
-    border-radius: 12px;
-    padding: 10px 16px;
-    min-width: 170px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-    cursor: pointer;
-    transition: all 0.15s ease;
-}
-
-.node-selected {
-    outline: 2.5px solid #4f46e5 !important;
-    outline-offset: 2px;
-}
-
-.roadmap-node-content {
-    display: flex;
-    flex-direction: column;
-    gap: 3px;
-}
-
-.node-tier {
-    font-size: 10px;
-    font-weight: 700;
-    text-transform: uppercase;
-    color: #94a3b8;
-}
-
-.node-title {
     font-size: 13px;
-    color: #0f172a;
-    font-weight: 700;
+    font-weight: 600;
+    padding: 12px 20px;
+    border-radius: 9999px;
+    transition: background-color 0.15s ease;
 }
 
-.status-pill {
-    font-size: 10px;
-    font-weight: 700;
-    padding: 2px 8px;
-    border-radius: 999px;
-    width: fit-content;
+.btn-practice-topic:hover {
+    background: #2d332f;
 }
 
-.status-mastered { border: 2px solid #10b981 !important; background: #f0fdf4 !important; }
-.pill-mastered { background: #dcfce7; color: #15803d; }
+@media (max-width: 1050px) {
+    .skill-kpi-bar {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .skill-workspace-grid {
+        grid-template-columns: 1fr;
+    }
+}
 
-.status-focus { border: 2px solid #4f46e5 !important; background: #eef2ff !important; box-shadow: 0 0 14px rgba(79, 70, 229, 0.25) !important; }
-.pill-focus { background: #4f46e5; color: #ffffff; }
-
-.status-locked { border: 1.5px solid #e2e8f0 !important; opacity: 0.85; }
-.pill-locked { background: #f1f5f9; color: #64748b; }
+@media (max-width: 650px) {
+    .skill-kpi-bar {
+        grid-template-columns: 1fr;
+    }
+    .grid-2-col, .grid-3-col {
+        grid-template-columns: 1fr;
+    }
+}
