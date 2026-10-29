@@ -10,6 +10,34 @@ const THEMES = [
     { id: 'tuscan-sage', label: 'Tuscan Alabaster & Sage', icon: '🌿' }
 ];
 
+function resolveUserProfile() {
+    try {
+        let authEmail = '';
+        let authName = '';
+        try {
+            const auth = JSON.parse(localStorage.getItem('dsaforge-auth') || '{}');
+            if (auth.email) authEmail = auth.email.trim();
+            if (auth.name) authName = auth.name.trim();
+        } catch {
+            // ignore
+        }
+
+        const saved = JSON.parse(localStorage.getItem('dsaforge-profile') || '{}');
+        let email = saved.email ? saved.email.trim() : '';
+        if (!email || email === 'shaili@example.com' || email === 'learner@dsaforge.dev') {
+            email = authEmail || '';
+        }
+        let name = saved.name ? saved.name.trim() : '';
+        if (!name || name === 'Learner') {
+            name = authName || 'garima';
+        }
+
+        return { name, email };
+    } catch {
+        return { name: "garima", email: "" };
+    }
+}
+
 export default function Topbar() {
     const navigate = useNavigate();
 
@@ -40,17 +68,8 @@ export default function Topbar() {
         }
     }, [theme]);
 
-    // 2. User Profile State
-    const [userProfile, setUserProfile] = useState(() => {
-        try {
-            return JSON.parse(
-                localStorage.getItem('dsaforge-profile') ||
-                '{"name": "garima", "email": "shaili@example.com"}'
-            );
-        } catch {
-            return { name: "garima", email: "shaili@example.com" };
-        }
-    });
+    // 2. User Profile State (Resolved dynamically from registered account)
+    const [userProfile, setUserProfile] = useState(resolveUserProfile);
 
     // 3. Activity & Solved Counts for dynamic badges
     const [activity, setActivity] = useState(() => getActivityData());
@@ -58,12 +77,7 @@ export default function Topbar() {
     useEffect(() => {
         function handleUpdate() {
             setActivity(getActivityData());
-            try {
-                const saved = JSON.parse(localStorage.getItem('dsaforge-profile') || '{}');
-                if (saved.name) setUserProfile(saved);
-            } catch {
-                // ignore
-            }
+            setUserProfile(resolveUserProfile());
         }
 
         window.addEventListener(ACTIVITY_EVENT, handleUpdate);
@@ -297,7 +311,7 @@ export default function Topbar() {
                         <div className="profile-dropdown-panel">
                             <div className="profile-header-summary">
                                 <strong>{userProfile.name || 'garima'}</strong>
-                                <span>{userProfile.email || 'shaili@example.com'}</span>
+                                <span>{userProfile.email || 'garima@dsaforge.dev'}</span>
                             </div>
 
                             <div className="profile-menu-links">

@@ -2,18 +2,52 @@ import { useState, useEffect } from 'react';
 import './profile.css';
 import { getActivityData, ACTIVITY_EVENT } from '../data/activityData';
 
-const defaultProfile = {
-    name: 'garima',
-    email: 'shaili@example.com',
-    goal: 'Master DSA'
-};
-
 function getSavedProfile() {
     try {
-        const saved = localStorage.getItem('dsaforge-profile');
-        return saved ? { ...defaultProfile, ...JSON.parse(saved) } : defaultProfile;
+        let authEmail = '';
+        let authName = '';
+        try {
+            const auth = JSON.parse(localStorage.getItem('dsaforge-auth') || '{}');
+            if (auth.email) authEmail = auth.email.trim();
+            if (auth.name) authName = auth.name.trim();
+        } catch {
+            // ignore
+        }
+
+        const savedStr = localStorage.getItem('dsaforge-profile');
+        const saved = savedStr ? JSON.parse(savedStr) : {};
+
+        // Never keep legacy dummy emails like 'shaili@example.com' or 'learner@dsaforge.dev'
+        let resolvedEmail = saved.email ? saved.email.trim() : '';
+        if (!resolvedEmail || resolvedEmail === 'shaili@example.com' || resolvedEmail === 'learner@dsaforge.dev') {
+            resolvedEmail = authEmail || '';
+        }
+
+        let resolvedName = saved.name ? saved.name.trim() : '';
+        if (!resolvedName || resolvedName === 'Learner') {
+            resolvedName = authName || 'garima';
+        }
+
+        const resolvedGoal = saved.goal || 'Master DSA';
+
+        const merged = {
+            name: resolvedName,
+            email: resolvedEmail,
+            goal: resolvedGoal
+        };
+
+        // Self-heal localStorage if the old placeholder was stored
+        if (saved.email === 'shaili@example.com' || saved.email === 'learner@dsaforge.dev') {
+            try {
+                localStorage.setItem('dsaforge-profile', JSON.stringify(merged));
+            } catch {
+                // ignore
+            }
+        }
+
+        return merged;
     } catch {
-        return defaultProfile;
+        return { name: 'garima', email: '', goal: 'Master DSA' };
     }
 }
 
@@ -45,14 +79,18 @@ export default function Profile() {
     });
 
     useEffect(() => {
-        function refreshActivity() {
+        function refreshProfileAndActivity() {
             setActivityData(getActivityData());
+            const currentProfile = getSavedProfile();
+            setProfile(currentProfile);
+            setFormData(currentProfile);
         }
-        window.addEventListener(ACTIVITY_EVENT, refreshActivity);
-        window.addEventListener('storage', refreshActivity);
+
+        window.addEventListener(ACTIVITY_EVENT, refreshProfileAndActivity);
+        window.addEventListener('storage', refreshProfileAndActivity);
         return () => {
-            window.removeEventListener(ACTIVITY_EVENT, refreshActivity);
-            window.removeEventListener('storage', refreshActivity);
+            window.removeEventListener(ACTIVITY_EVENT, refreshProfileAndActivity);
+            window.removeEventListener('storage', refreshProfileAndActivity);
         };
     }, []);
 
@@ -94,9 +132,24 @@ export default function Profile() {
 
         try {
             localStorage.setItem('dsaforge-profile', JSON.stringify(updatedProfile));
+            
+            // Keep auth in sync
+            try {
+                const auth = JSON.parse(localStorage.getItem('dsaforge-auth') || '{}');
+                auth.name = updatedProfile.name;
+                auth.email = updatedProfile.email;
+                localStorage.setItem('dsaforge-auth', JSON.stringify(auth));
+            } catch {
+                // ignore
+            }
+
             setProfile(updatedProfile);
             setFormData(updatedProfile);
             setMessage('✓ Personal information updated.');
+
+            // Notify topbar and other listeners
+            window.dispatchEvent(new Event('storage'));
+
             setTimeout(() => setMessage(''), 3500);
         } catch {
             alert('Could not save profile.');
@@ -192,7 +245,7 @@ export default function Profile() {
                                     value={formData.email}
                                     onChange={handleChange}
                                     required
-                                    placeholder="you@example.com"
+                                    placeholder="Enter your registered email"
                                     className="profile-input"
                                 />
                             </div>

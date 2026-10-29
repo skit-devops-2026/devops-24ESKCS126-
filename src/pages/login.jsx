@@ -33,6 +33,7 @@ function Login() {
             };
             localStorage.setItem('dsaforge-profile', JSON.stringify(updatedProfile));
             localStorage.setItem('dsaforge-auth', JSON.stringify({ isLoggedIn: true, name: updatedProfile.name, email }));
+            window.dispatchEvent(new Event('storage'));
         } catch (err) {
             console.error('Could not save login session:', err);
         }

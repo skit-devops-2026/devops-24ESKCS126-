@@ -35,7 +35,7 @@ function Register() {
         }
 
         try {
-            // Save registered profile to localStorage so user's real name is used across the dashboard
+            // Save registered profile to localStorage so user's real name and email are used across the dashboard
             const profileData = {
                 name: name,
                 email: email,
@@ -43,6 +43,7 @@ function Register() {
             };
             localStorage.setItem('dsaforge-profile', JSON.stringify(profileData));
             localStorage.setItem('dsaforge-auth', JSON.stringify({ isLoggedIn: true, name, email }));
+            window.dispatchEvent(new Event('storage'));
         } catch (err) {
             console.error('Could not save user profile:', err);
         }

@@ -38,19 +38,38 @@ const defaultUpNext = [
     }
 ];
 
+function resolveUserProfile() {
+    try {
+        let authEmail = '';
+        let authName = '';
+        try {
+            const auth = JSON.parse(localStorage.getItem('dsaforge-auth') || '{}');
+            if (auth.email) authEmail = auth.email.trim();
+            if (auth.name) authName = auth.name.trim();
+        } catch {
+            // ignore
+        }
+
+        const saved = JSON.parse(localStorage.getItem('dsaforge-profile') || '{}');
+        let email = saved.email ? saved.email.trim() : '';
+        if (!email || email === 'shaili@example.com' || email === 'learner@dsaforge.dev') {
+            email = authEmail || '';
+        }
+        let name = saved.name ? saved.name.trim() : '';
+        if (!name || name === 'Learner') {
+            name = authName || 'garima';
+        }
+
+        return { name, email };
+    } catch {
+        return { name: "garima", email: "" };
+    }
+}
+
 export default function Overview() {
     // 1. Live Activity & Profile Data
     const [data, setData] = useState(() => getActivityData());
-    const [profile, setProfile] = useState(() => {
-        try {
-            return JSON.parse(
-                localStorage.getItem('dsaforge-profile') ||
-                '{"name": "garima", "email": "shaili@example.com"}'
-            );
-        } catch {
-            return { name: "garima", email: "shaili@example.com" };
-        }
-    });
+    const [profile, setProfile] = useState(resolveUserProfile);
 
     const savedHandles = (() => {
         try {
@@ -94,12 +113,7 @@ export default function Overview() {
     useEffect(() => {
         function refreshActivityData() {
             setData(getActivityData());
-            try {
-                const p = JSON.parse(localStorage.getItem('dsaforge-profile') || '{}');
-                if (p.name) setProfile(p);
-            } catch {
-                // ignore
-            }
+            setProfile(resolveUserProfile());
         }
 
         window.addEventListener(ACTIVITY_EVENT, refreshActivityData);
